@@ -1,0 +1,247 @@
+{% extends "_base.html" %}
+{% set active_tab = "settings" %}
+{% block layout_extra %} no-right{% endblock %}
+{% block body %}
+
+<header class="top">
+  <div class="searchbar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v6M12 17v6M4.2 4.2l4.2 4.2M15.6 15.6l4.2 4.2M1 12h6M17 12h6"/></svg>
+    <input id="settingsSearch" placeholder="Filter settings…" autocomplete="off" />
+    <span class="save-status" id="saveStatus"><span class="dot"></span><span class="lbl">saved</span></span>
+  </div>
+  <div class="top-actions">
+    <button class="iconbtn" id="exportCfg" title="Export config.json">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+    </button>
+    <button class="iconbtn" id="reloadCfg" title="Reload from disk">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 3v6h6"/></svg>
+    </button>
+    <button class="save-btn" id="forceSaveBtn" title="Save changes now">Force save</button>
+  </div>
+</header>
+
+<section class="main">
+  <div class="headline" style="margin-bottom:10px">
+    <div>
+      <h1>Settings</h1>
+      <div style="color:var(--muted);font-size:13px;margin-top:6px">
+        Every change auto-saves to <span class="kbd">config.json</span> and applies live.
+      </div>
+    </div>
+  </div>
+
+  <div class="card section-card" data-section="general">
+    <div class="head"><div style="font-weight:700;font-size:16px">General</div></div>
+    <div class="settings-grid">
+      <div class="field"><label>Theme (live)</label>
+        <select data-path="theme">
+          <option value="cream">Cream</option>
+          <option value="dark">Dark</option>
+          <option value="dracula">Dracula</option>
+          <option value="nord">Nord</option>
+          <option value="solarized">Solarized</option>
+          <option value="mono">Monochrome</option>
+        </select>
+      </div>
+      <div class="field"><label>Language</label>
+        <select data-path="language">
+          <option value="en">English</option>
+          <option value="jp">日本語</option>
+          <option value="es">Español</option>
+          <option value="fr">Français</option>
+          <option value="de">Deutsch</option>
+        </select>
+      </div>
+      <div class="field"><label>Default resolution</label>
+        <select data-path="default_resolution">
+          <option>480p</option><option>720p</option><option>1080p</option><option>2160p</option>
+        </select>
+      </div>
+      <div class="field"><label>Min seeders filter</label><input type="number" data-path="min_seeders" min="0"></div>
+      <div class="field"><label>Aggregator threshold (use DDLs if &lt; X)</label><input type="number" data-path="aggregator_threshold" min="0"></div>
+      <div class="field"><label>Cache TTL (seconds)</label><input type="number" data-path="cache_ttl_seconds" min="0"></div>
+      <div class="field"><label>Max threads</label><input type="number" data-path="max_threads" min="1" max="64"></div>
+      <div class="field"><label>CORS proxy URL</label><input data-path="cors_proxy_url" placeholder=""></div>
+      <div class="field"><label>Auto-save settings while typing</label>
+        <select id="autoSaveToggle">
+          <option value="true">on (debounced 400 ms)</option>
+          <option value="false">off (use Force save)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="card section-card" data-section="manga" style="margin-top:14px">
+    <div class="head"><div style="font-weight:700;font-size:16px">Manga / Manhua / Webtoons</div></div>
+    <div class="settings-grid">
+      <div class="field"><label>Default export format</label>
+        <select data-path="manga.default_format">
+          <option value="cbz">CBZ (comic readers)</option>
+          <option value="zip">ZIP (plain)</option>
+          <option value="epub">EPUB (Apple Books)</option>
+          <option value="pdf">PDF</option>
+        </select>
+      </div>
+      <div class="field"><label>Auto-crop white margins</label>
+        <select data-path="manga.autocrop" data-type="bool">
+          <option value="false">no crop</option>
+          <option value="true">auto crop</option>
+        </select>
+      </div>
+      <div class="field"><label>Save path (empty = ./manga)</label><input data-path="manga.save_path"></div>
+      <div class="field"><label>Metadata format</label>
+        <select data-path="manga.metadata_format">
+          <option value="apple_books">Apple Books (recommended)</option>
+          <option value="calibre">Calibre / KOReader</option>
+          <option value="plain">Plain (no extras)</option>
+        </select>
+      </div>
+      <div class="field"><label>Page progression</label>
+        <select data-path="manga.page_progression">
+          <option value="rtl">Right-to-left (manga)</option>
+          <option value="ltr">Left-to-right (webtoons / western)</option>
+        </select>
+      </div>
+      <div class="field"><label>Language code</label><input data-path="manga.language" placeholder="en"></div>
+      <div class="field"><label>Embed cover image</label>
+        <select data-path="manga.embed_cover" data-type="bool"><option value="true">yes</option><option value="false">no</option></select>
+      </div>
+      <div class="field"><label>Split chapters into separate files</label>
+        <select data-path="manga.include_chapter_split" data-type="bool"><option value="false">no</option><option value="true">yes</option></select>
+      </div>
+    </div>
+  </div>
+
+  <div class="card section-card" data-section="manga-sources" style="margin-top:14px">
+    <div class="head">
+      <div style="font-weight:700;font-size:16px">Manga sources</div>
+      <div style="display:flex;gap:8px">
+        <button class="filter-btn" id="mangaAll">Enable all</button>
+        <button class="filter-btn" id="mangaNone">Disable all</button>
+      </div>
+    </div>
+    <div id="mangaSourcesToggle"><div class="empty" style="border-radius:10px">loading…</div></div>
+  </div>
+
+  <div class="card section-card" data-section="nn" style="margin-top:14px">
+    <div class="head"><div style="font-weight:700;font-size:16px">Neural network</div></div>
+    <div class="settings-grid">
+      <div class="field"><label>Enabled</label>
+        <select data-path="neural_network.enabled" data-type="bool">
+          <option value="true">on</option><option value="false">off</option>
+        </select>
+      </div>
+      <div class="field"><label>Learning rate</label>
+        <input type="number" step="0.01" data-path="neural_network.learning_rate">
+      </div>
+    </div>
+    <div style="font-weight:600;margin:12px 0 6px">Feature weights</div>
+    <div class="settings-grid" id="nnWeights"></div>
+  </div>
+
+  <div class="card section-card" data-section="sources" style="margin-top:14px">
+    <div class="head">
+      <div style="font-weight:700;font-size:16px">Torrent sources</div>
+      <div style="display:flex;gap:8px">
+        <button class="filter-btn" id="srcAll">Enable all</button>
+        <button class="filter-btn" id="srcNone">Disable all</button>
+      </div>
+    </div>
+    <div id="sourcesToggle"><div class="empty" style="border-radius:10px">loading…</div></div>
+  </div>
+
+  <div class="card section-card" data-section="ddl" style="margin-top:14px">
+    <div class="head">
+      <div style="font-weight:700;font-size:16px">DDL fallback sources</div>
+      <div style="display:flex;gap:8px">
+        <button class="filter-btn" id="ddlAll">Enable all</button>
+        <button class="filter-btn" id="ddlNone">Disable all</button>
+      </div>
+    </div>
+    <div id="ddlToggle"><div class="empty" style="border-radius:10px">loading…</div></div>
+  </div>
+
+  <div class="card section-card" data-section="qbit" style="margin-top:14px">
+    <div class="head">
+      <div style="font-weight:700;font-size:16px">qBittorrent</div>
+      <button class="filter-btn" id="testQbit">Test connection</button>
+    </div>
+    <div class="settings-grid">
+      <div class="field"><label>Enabled</label>
+        <select data-path="qbittorrent.enabled" data-type="bool"><option value="true">on</option><option value="false">off</option></select>
+      </div>
+      <div class="field"><label>Host (incl. http://)</label><input data-path="qbittorrent.host"></div>
+      <div class="field"><label>Username</label><input data-path="qbittorrent.user"></div>
+      <div class="field"><label>Password</label><input data-path="qbittorrent.password" type="password"></div>
+      <div class="field"><label>Category</label><input data-path="qbittorrent.category"></div>
+      <div class="field"><label>Save path (optional)</label><input data-path="qbittorrent.save_path"></div>
+    </div>
+  </div>
+
+  <div class="card section-card" data-section="ai" style="margin-top:14px">
+    <div class="head"><div style="font-weight:700;font-size:16px">AI title normalization</div></div>
+    <div class="settings-grid">
+      <div class="field"><label>Ollama URL</label><input data-path="ai.ollama_url"></div>
+      <div class="field"><label>Ollama model</label><input data-path="ai.ollama_model"></div>
+      <div class="field"><label>OpenAI-compatible URL</label><input data-path="ai.openai_compatible_url"></div>
+      <div class="field"><label>OpenAI-compatible API key</label><input data-path="ai.openai_api_key" type="password"></div>
+      <div class="field"><label>OpenAI-compatible model</label><input data-path="ai.openai_model"></div>
+      <div class="field"><label>Use AI for normalization</label>
+        <select data-path="ai.use_for_title_normalization" data-type="bool"><option value="true">on</option><option value="false">off</option></select>
+      </div>
+    </div>
+  </div>
+
+  <div class="card section-card" data-section="notify" style="margin-top:14px">
+    <div class="head">
+      <div style="font-weight:700;font-size:16px">Notifications</div>
+      <button class="filter-btn" id="testNotify">Send test notification</button>
+    </div>
+    <div class="settings-grid">
+      <div class="field"><label>Discord webhook on</label>
+        <select data-path="discord_webhook.enabled" data-type="bool"><option value="true">on</option><option value="false">off</option></select>
+      </div>
+      <div class="field"><label>Discord webhook URL</label><input data-path="discord_webhook.url"></div>
+      <div class="field"><label>ntfy enabled</label>
+        <select data-path="ntfy.enabled" data-type="bool"><option value="true">on</option><option value="false">off</option></select>
+      </div>
+      <div class="field"><label>ntfy server URL</label><input data-path="ntfy.url"></div>
+      <div class="field"><label>ntfy topic</label><input data-path="ntfy.topic"></div>
+      <div class="field"><label>Telegram enabled</label>
+        <select data-path="telegram.enabled" data-type="bool"><option value="true">on</option><option value="false">off</option></select>
+      </div>
+      <div class="field"><label>Telegram bot token</label><input data-path="telegram.token" type="password"></div>
+      <div class="field"><label>Telegram chat id</label><input data-path="telegram.chat_id"></div>
+    </div>
+  </div>
+
+  <div class="card section-card" data-section="plugins" style="margin-top:14px">
+    <div class="head">
+      <div style="font-weight:700;font-size:16px">Plugins (every feature is a toggle)</div>
+      <div style="display:flex;gap:8px">
+        <button class="filter-btn" id="plugAll">Enable all</button>
+        <button class="filter-btn" id="plugNone">Disable all</button>
+      </div>
+    </div>
+    <div id="pluginsToggle"><div class="empty" style="border-radius:10px">loading…</div></div>
+  </div>
+
+  <div class="card section-card" data-section="groups" style="margin-top:14px">
+    <div class="head"><div style="font-weight:700;font-size:16px">Trusted fansub groups</div></div>
+    <div class="field">
+      <label>Comma-separated list</label>
+      <input data-path="trusted_groups" data-list="true">
+      <span class="hint">Members of this list get a NN trust boost.</span>
+    </div>
+  </div>
+
+  <div style="margin: 24px 0 60px; color: var(--muted); font-size: 12px;">
+    Changes write to <span class="kbd">config.json</span> as you type (debounced 400 ms).
+  </div>
+</section>
+
+<div class="toasts" id="toasts"></div>
+{% endblock %}
+{% block scripts %}
+<script>window.__SETTINGS_PAGE = true;</script>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends "_base.html" %}
+{% block layout_extra %} no-right{% endblock %}
+{% block body %}
+<header class="top">
+  <div class="searchbar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>
+    <input id="mangaQ" placeholder='Search manga / manhua / manhwa / webtoons…' autocomplete="off">
+    <span class="kbd">Enter</span>
+  </div>
+  <div class="top-actions">
+    <button class="iconbtn" id="mangaRefresh" title="Refresh">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 3v6h6"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="main">
+  <div class="headline">
+    <div>
+      <h1>Manga</h1>
+      <div style="color:var(--muted);font-size:13px;margin-top:6px">
+        {{ sources|length }} sources enabled · CBZ / ZIP / EPUB / PDF export ·
+        <span class="kbd">Apple Books</span> compatible metadata
+      </div>
+    </div>
+    <div class="toggle">
+      <span>Auto-crop margins</span>
+      <div class="switch{% if not cfg.manga.autocrop %} off{% endif %}" id="cropToggle"></div>
+    </div>
+  </div>
+
+  <!-- Download-by-URL panel -->
+  <div class="card" id="url" style="margin-bottom:14px">
+    <div class="head">
+      <div style="font-weight:700;font-size:15px">Download by URL</div>
+      <span class="pill outline">paste any manga / chapter link</span>
+    </div>
+    <div class="settings-grid" style="grid-template-columns: 2fr 1fr 1fr">
+      <div class="field"><label>URL</label><input id="urlInput" placeholder="https://…"></div>
+      <div class="field"><label>Title (optional)</label><input id="urlTitle"></div>
+      <div class="field"><label>Format</label>
+        <select id="urlFmt">
+          <option value="cbz">CBZ (comic readers)</option>
+          <option value="zip">ZIP (plain)</option>
+          <option value="epub">EPUB (Apple Books)</option>
+          <option value="pdf">PDF</option>
+        </select>
+      </div>
+    </div>
+    <button class="save-btn" id="urlGo">Start download</button>
+  </div>
+
+  <!-- Search results -->
+  <div id="mangaResults">
+    <div class="card empty">Type a query above to search across {{ sources|length }} sources.</div>
+  </div>
+
+  <!-- Job queue -->
+  <div class="card" id="jobs" style="margin-top:14px">
+    <div class="head">
+      <div style="font-weight:700;font-size:15px">Active downloads</div>
+      <button class="filter-btn" id="refreshJobs">Refresh</button>
+    </div>
+    <div id="jobList" class="empty">No jobs yet.</div>
+  </div>
+</section>
+
+<div class="toasts" id="toasts"></div>
+{% endblock %}
+{% block scripts %}
+<script>
+  window.__MANGA_PAGE = true;
+  window.__MANGA_SOURCES = {{ sources|tojson }};
+  window.__MANGA_CFG = {{ cfg.manga|tojson }};
+</script>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends "_base.html" %}
+{% block layout_extra %} no-right{% endblock %}
+{% block body %}
+<header class="top">
+  <div class="searchbar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9"/></svg>
+    <input id="favFilter" placeholder="Filter favorites by title…" autocomplete="off">
+  </div>
+  <div class="top-actions">
+    <button class="iconbtn" id="favExport" title="Export favorites as JSON">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+    </button>
+    <button class="iconbtn" id="favClear" title="Remove all">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="main">
+  <div class="headline">
+    <div>
+      <h1>Favorites</h1>
+      <div style="color:var(--muted);font-size:13px;margin-top:6px" id="favSubtitle">{{ favorites|length }} saved title{{ '' if favorites|length == 1 else 's' }}</div>
+    </div>
+  </div>
+
+  <div class="kpis">
+    <div class="card"><div class="kpi-label">Total favorited</div><div class="kpi-value">{{ favorites|length }}</div></div>
+    <div class="card"><div class="kpi-label">With AniList ID</div><div class="kpi-value">{{ favorites|selectattr('anilist_id')|list|length }}</div></div>
+    <div class="card dark"><div class="kpi-label" style="color:#BDB8B3">Latest</div>
+      <div class="kpi-value" style="font-size:18px;line-height:1.1;margin-top:6px">
+        {{ favorites[-1].title if favorites else '—' }}
+      </div></div>
+    <div class="card"><div class="kpi-label">Storage</div><div class="kpi-value">JSON</div><div class="kpi-row"><span class="pill outline">data/favorites.json</span></div></div>
+  </div>
+
+  <div class="grid-2" id="favGrid" style="grid-template-columns: repeat(auto-fill, minmax(260px,1fr))">
+    {% for f in favorites %}
+    <div class="card fav-card" data-title="{{ f.title }}">
+      <div style="font-weight:700;font-size:15px;margin-bottom:4px">{{ f.title }}</div>
+      <div style="color:var(--muted);font-size:12px">
+        added {{ f.ts | int }} ·
+        {% if f.anilist_id %}AniList #{{ f.anilist_id }}{% else %}no metadata{% endif %}
+      </div>
+      <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">
+        <button class="filter-btn search-btn" data-q="{{ f.title }}">Search</button>
+        {% if f.anilist_id %}
+        <a class="filter-btn" target="_blank" href="https://anilist.co/anime/{{ f.anilist_id }}">AniList</a>
+        {% endif %}
+        <button class="filter-btn rm-btn" data-title="{{ f.title }}">Remove</button>
+      </div>
+    </div>
+    {% else %}
+    <div class="card empty" style="grid-column:1/-1">
+      No favorites yet. Search for an anime, then click <b>Favorite</b> in the sidebar.
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<div class="toasts" id="toasts"></div>
+{% endblock %}
+{% block scripts %}<script>window.__FAVORITES_PAGE = true;</script>{% endblock %}

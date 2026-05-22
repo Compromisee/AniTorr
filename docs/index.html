@@ -1,0 +1,678 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ANITorr — docs</title>
+<link rel="stylesheet" href="assets/docs.css">
+<meta name="theme-color" content="#ec2a6a">
+<meta name="description" content="ANITorr — plugin-driven anime + manga + torrent finder with neural ranking, Flask dashboard, colored CLI and Textual TUI.">
+</head>
+<body>
+<canvas id="particles"></canvas>
+<div class="grid-bg"></div>
+
+<!-- TOC sidebar -->
+<aside class="toc">
+  <div class="toc-title">On this page</div>
+  <a href="#hero">Intro</a>
+  <a href="#features">Features</a>
+  <a href="#install">Install</a>
+  <a href="#cli">CLI</a>
+  <a href="#anime-flow">Anime flow</a>
+  <a href="#manga">Manga</a>
+  <a href="#settings">Settings</a>
+  <a href="#tui">TUI</a>
+  <a href="#oneliner">One-liner</a>
+  <a href="#api">HTTP API</a>
+  <a href="#nn">Neural net</a>
+  <a href="#modules">.module</a>
+  <a href="#plugins">Plugins</a>
+  <a href="#refs">Function ref</a>
+  <a href="#config">config.json</a>
+</aside>
+
+<!-- ===== top nav ===== -->
+<header class="nav">
+  <div class="brand">
+    <span class="sq"></span>
+    <span class="brand-name">ANITorr</span>
+    <span class="tag">v1.0</span>
+  </div>
+  <nav class="links">
+    <a href="#features">Features</a>
+    <a href="#install">Install</a>
+    <a href="#cli">CLI</a>
+    <a href="#tui">TUI</a>
+    <a href="#api">API</a>
+    <a href="#nn">Neural net</a>
+    <a href="#modules">.module</a>
+    <a href="#refs">Function ref</a>
+    <a href="https://github.com/" class="ghost">GitHub</a>
+  </nav>
+  <button id="themeBtn" class="iconbtn" title="Toggle theme">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v3M12 20v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M1 12h3M20 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>
+  </button>
+</header>
+
+<!-- ===== hero ===== -->
+<section class="hero" id="hero">
+  <div class="hero-inner">
+    <span class="kicker"><span class="dot"></span> plugin-driven · neural-ranked · self-hosted</span>
+    <h1>
+      <span class="line">Find the right</span>
+      <span class="line accent">anime &amp; manga</span>
+      <span class="line">in one keystroke.</span>
+    </h1>
+    <p class="lead">
+      Flask dashboard + Beautiful-Soup scrapers + Node CORS proxy + colored Rich CLI
+      + pastel Textual TUI + a tiny online-learning ranker that gets better every click.
+      13 manga sources, 8 torrent trackers, 10+ DDL fallbacks, EPUB / CBZ / PDF export,
+      Apple-Books-compatible metadata, qBittorrent integration, file-level selection.
+    </p>
+    <div class="cta-row">
+      <a href="#install" class="btn primary">Get started</a>
+      <a href="#cli" class="btn ghost">See the CLI</a>
+      <code class="copy" data-copy="git clone https://github.com/you/anitorr">git clone https://github.com/you/anitorr</code>
+    </div>
+
+    <!-- live install terminal -->
+    <div class="terminal" id="t-install" data-script="1">
+      <div class="term-bar">
+        <span class="sq"></span><span class="sq sm"></span><span class="sq sm"></span>
+        <span class="path">~ / install</span>
+        <button class="replay" title="Replay">replay</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== marquee strip ===== -->
+<section class="strip">
+  <div class="strip-inner">
+    <span>nyaa.si</span><span>anidex</span><span>tokyotosho</span><span>subsplease</span>
+    <span>erai-raws</span><span>animetosho</span><span>shanaproject</span><span>anirena</span>
+    <span>mangadex</span><span>manganato</span><span>mangakakalot</span><span>webtoons</span>
+    <span>asurascans</span><span>reaperscans</span><span>flamescans</span><span>hitomi</span>
+    <span>tappytoon</span><span>mangaplus</span><span>batoto</span><span>mangafox</span>
+    <span>animepahe</span><span>gogoanime</span><span>zoro</span><span>twist</span>
+    <span>nyaa.si</span><span>anidex</span><span>mangadex</span><span>webtoons</span>
+  </div>
+</section>
+
+<!-- ===== features ===== -->
+<section id="features" class="section">
+  <h2><span class="num">1</span>Everything inside</h2>
+  <p class="muted">All 60+ features ship as toggleable plugins in <code>config.json</code>. Drop your own into <code>plugins/</code> or <code>modules/</code> to extend.</p>
+  <div class="feature-grid">
+    <div class="feat reveal"><span class="badge">core</span><h3>Anime torrent finder</h3><p>Multi-source aggregation across 8 trackers + 10 DDL fallbacks.</p></div>
+    <div class="feat reveal"><span class="badge">core</span><h3>Manga / manhua / webtoons</h3><p>13 sources, search, chapter browser, batch download.</p></div>
+    <div class="feat reveal"><span class="badge">ai</span><h3>Neural ranker</h3><p>Online logistic regression that learns from every pick.</p></div>
+    <div class="feat reveal"><span class="badge">ai</span><h3>Relevance gate</h3><p>Drops unrelated-language releases that pollute results.</p></div>
+    <div class="feat reveal"><span class="badge">ai</span><h3>NN fallback</h3><p>Auto-switches to seeder sort when NN quality drops below 30%.</p></div>
+    <div class="feat reveal"><span class="badge">ai</span><h3>AI title normalization</h3><p>Ollama or OpenAI-compatible — expands abbreviations, finds JP titles.</p></div>
+    <div class="feat reveal"><span class="badge">meta</span><h3>AniList integration</h3><p>Cover art, score, episode count, season, genres on every search.</p></div>
+    <div class="feat reveal"><span class="badge">meta</span><h3>MAL / Jikan</h3><p>Backup metadata source + autocomplete suggestions.</p></div>
+    <div class="feat reveal"><span class="badge">meta</span><h3>Fansub trust ranking</h3><p>SubsPlease, Erai-raws, ASW, EMBER bubble to the top.</p></div>
+    <div class="feat reveal"><span class="badge">meta</span><h3>Tag parser</h3><p>Detects x264 / x265 / AV1, FLAC / AAC / Opus, BD / WEB / TV.</p></div>
+    <div class="feat reveal"><span class="badge">meta</span><h3>Duplicate detection</h3><p>Keeps your season consistent — same group across every episode.</p></div>
+    <div class="feat reveal"><span class="badge">srv</span><h3>Node CORS proxy</h3><p>Yields real Nyaa links from the browser without CORS pain.</p></div>
+    <div class="feat reveal"><span class="badge">srv</span><h3>Multi-threaded fan-out</h3><p>Up to 12 parallel scrapers; results deduped on hash + title.</p></div>
+    <div class="feat reveal"><span class="badge">srv</span><h3>TTL cache</h3><p>Configurable per-query cache so repeat searches are instant.</p></div>
+    <div class="feat reveal"><span class="badge">srv</span><h3>SSE live results</h3><p>Server-sent events stream per-source batches into the UI.</p></div>
+    <div class="feat reveal"><span class="badge">srv</span><h3>Rotating log</h3><p>1 MB file rotated, visible at <code>/reports</code> with live tail.</p></div>
+    <div class="feat reveal"><span class="badge">srv</span><h3>Docker</h3><p>One <code>docker compose up</code> brings up Flask + Node proxy together.</p></div>
+    <div class="feat reveal"><span class="badge">cli</span><h3>Mode picker</h3><p>Pastel terminal panels — anime / manga / settings on launch.</p></div>
+    <div class="feat reveal"><span class="badge">cli</span><h3>Table-based results</h3><p>Rich rounded tables with color-coded seeder health.</p></div>
+    <div class="feat reveal"><span class="badge">cli</span><h3>File-level selection</h3><p>qBittorrent metadata API enumerates files inside a torrent.</p></div>
+    <div class="feat reveal"><span class="badge">cli</span><h3>One-liner mode</h3><p><code>anitorr -q "Frieren" -r 1080 --auto</code>.</p></div>
+    <div class="feat reveal"><span class="badge">cli</span><h3>Four themes</h3><p>Pastel · Dracula · Nord · Mono.</p></div>
+    <div class="feat reveal"><span class="badge">tui</span><h3>Textual TUI</h3><p>Pastel dark theme, three tabs, key-driven, no white backgrounds.</p></div>
+    <div class="feat reveal"><span class="badge">web</span><h3>Dashboard</h3><p>KPI cards, source breakdown, resolution mix, compare panel.</p></div>
+    <div class="feat reveal"><span class="badge">web</span><h3>Customizable widgets</h3><p>Toggle every dashboard widget on/off; saved per-user.</p></div>
+    <div class="feat reveal"><span class="badge">web</span><h3>Library page</h3><p>Aggregated overview of torrents, manga, favorites, history.</p></div>
+    <div class="feat reveal"><span class="badge">web</span><h3>Reports / live log</h3><p>Color-coded log tail with 2-second auto-refresh.</p></div>
+    <div class="feat reveal"><span class="badge">web</span><h3>Notifications inbox</h3><p>Red badge on rail bell; mark-read; clear; per-row links.</p></div>
+    <div class="feat reveal"><span class="badge">web</span><h3>PWA</h3><p>Installable, offline shell, theme-color matched to accent.</p></div>
+    <div class="feat reveal"><span class="badge">web</span><h3>Help inline</h3><p>Built-in <code>/help</code> with shortcuts, categories, API ref.</p></div>
+    <div class="feat reveal"><span class="badge">web</span><h3>Six themes</h3><p>Cream · Dark · Dracula · Nord · Solarized · Mono.</p></div>
+    <div class="feat reveal"><span class="badge">web</span><h3>Search everywhere</h3><p>Each page has its own search bar; sidebar quick search too.</p></div>
+    <div class="feat reveal"><span class="badge">manga</span><h3>13 manga sources</h3><p>MangaDex (API) + 12 HTML scrapers with plugin override.</p></div>
+    <div class="feat reveal"><span class="badge">manga</span><h3>CBZ / ZIP export</h3><p>Pads filenames to 4 digits, works in any comic reader.</p></div>
+    <div class="feat reveal"><span class="badge">manga</span><h3>EPUB export</h3><p>Apple-Books-compatible: <code>dc:identifier</code>, <code>calibre:series</code>, pre-paginated layout.</p></div>
+    <div class="feat reveal"><span class="badge">manga</span><h3>PDF export</h3><p>One image per page; Pillow path + pure-Python fallback.</p></div>
+    <div class="feat reveal"><span class="badge">manga</span><h3>Auto-crop margins</h3><p>Optional Pillow-based trim of near-white borders.</p></div>
+    <div class="feat reveal"><span class="badge">manga</span><h3>Download by URL</h3><p>Paste any chapter link → background job → CBZ/EPUB/PDF.</p></div>
+    <div class="feat reveal"><span class="badge">qbit</span><h3>qBittorrent send</h3><p>One-click handoff; uses the Web API with category + save path.</p></div>
+    <div class="feat reveal"><span class="badge">qbit</span><h3>File priorities</h3><p>Picked files set priority=normal; rest skipped via filePrio.</p></div>
+    <div class="feat reveal"><span class="badge">qbit</span><h3>Metadata inspect</h3><p>Adds paused, polls files API, lists, then removes.</p></div>
+    <div class="feat reveal"><span class="badge">int</span><h3>Discord webhook</h3><p>Pushed for every notification.</p></div>
+    <div class="feat reveal"><span class="badge">int</span><h3>ntfy / Telegram</h3><p>Same notification fans out to your phone.</p></div>
+    <div class="feat reveal"><span class="badge">ext</span><h3>.module blocks</h3><p>YAML metadata + Python file = Scratch-style custom command.</p></div>
+    <div class="feat reveal"><span class="badge">ext</span><h3>plugins/manga</h3><p>Drop a .py with <code>search/chapters/pages</code> to add a source.</p></div>
+    <div class="feat reveal"><span class="badge">ext</span><h3>Toggle plugins</h3><p>40+ feature flags in settings — every feature is a switch.</p></div>
+    <div class="feat reveal"><span class="badge">data</span><h3>JSON / CSV export</h3><p>One click on any results page.</p></div>
+    <div class="feat reveal"><span class="badge">data</span><h3>Favorites</h3><p>Save anime by title; remembers AniList ID; quick re-search.</p></div>
+    <div class="feat reveal"><span class="badge">data</span><h3>History</h3><p>Last 300 picks; humanized timestamps; bulk export.</p></div>
+    <div class="feat reveal"><span class="badge">qol</span><h3>Magnet copy</h3><p>One-click clipboard.</p></div>
+    <div class="feat reveal"><span class="badge">qol</span><h3>Share URL</h3><p>Copies a shareable link with your query embedded.</p></div>
+    <div class="feat reveal"><span class="badge">qol</span><h3>Compare panel</h3><p>Click rows to stack them side-by-side.</p></div>
+    <div class="feat reveal"><span class="badge">qol</span><h3>Did-you-mean</h3><p>Jikan-powered autocomplete on the search bar.</p></div>
+    <div class="feat reveal"><span class="badge">qol</span><h3>Vim keys</h3><p>Optional j/k navigation, gg/G jumps.</p></div>
+    <div class="feat reveal"><span class="badge">qol</span><h3>Auto-save settings</h3><p>Debounced 400 ms; can disable for explicit Save mode.</p></div>
+    <div class="feat reveal"><span class="badge">qol</span><h3>Ctrl/⌘+S</h3><p>Force-save settings anywhere on the settings page.</p></div>
+    <div class="feat reveal"><span class="badge">safe</span><h3>Cross-source verify</h3><p>Same hash across multiple trackers = trust bonus.</p></div>
+    <div class="feat reveal"><span class="badge">safe</span><h3>VPN-disconnect check</h3><p>Optional refusal to start if tunnel drops.</p></div>
+    <div class="feat reveal"><span class="badge">i18n</span><h3>Native JP search</h3><p>AI + AniList synonyms drive katakana/kanji variants.</p></div>
+    <div class="feat reveal"><span class="badge">i18n</span><h3>EN / JP / ES / FR / DE</h3><p>UI language switcher in settings.</p></div>
+  </div>
+</section>
+
+<!-- ===== install ===== -->
+<section id="install" class="section alt">
+  <h2><span class="num">2</span>Install</h2>
+  <div class="three">
+    <div class="card reveal">
+      <h3><span class="num">1</span> Clone</h3>
+      <pre><code>git clone https://github.com/you/anitorr
+cd anitorr</code></pre>
+    </div>
+    <div class="card reveal">
+      <h3><span class="num">2</span> Python + Node</h3>
+      <pre><code>pip install -r requirements.txt
+cd cors_proxy && npm i && cd ..</code></pre>
+    </div>
+    <div class="card reveal">
+      <h3><span class="num">3</span> Run</h3>
+      <pre><code>node cors_proxy/server.js &amp;
+python backend/app.py
+# → http://localhost:5000</code></pre>
+    </div>
+  </div>
+  <div class="card wide reveal">
+    <h3>Or one command with Docker</h3>
+    <pre><code>docker compose up    # spawns Flask :5000 + CORS proxy :8787</code></pre>
+  </div>
+</section>
+
+<!-- ===== CLI ===== -->
+<section id="cli" class="section">
+  <h2><span class="num">3</span>CLI</h2>
+  <p class="muted">Launch with no flags and a pastel mode picker appears. Pick anime / manga / settings and the rest is keyboard-driven.</p>
+
+  <div class="terminal full" id="t-cli-modepick" data-script="1">
+    <div class="term-bar">
+      <span class="sq"></span><span class="sq sm"></span><span class="sq sm"></span>
+      <span class="path">~ / anitorr</span>
+      <button class="replay">replay</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Anime flow ===== -->
+<section id="anime-flow" class="section alt">
+  <h2><span class="num">4</span>Anime flow</h2>
+  <p class="muted">Query → metadata + variants → 8 trackers in parallel → relevance gate → NN rank → table → pick row → qBittorrent metadata fetch → file table → select files → send to client. Every step shown live below.</p>
+
+  <div class="terminal full" id="t-cli-anime" data-script="1">
+    <div class="term-bar">
+      <span class="sq"></span><span class="sq sm"></span><span class="sq sm"></span>
+      <span class="path">~ / anitorr — anime</span>
+      <button class="replay">replay</button>
+    </div>
+  </div>
+
+  <div class="two reveal" style="margin-top:30px">
+    <div class="card">
+      <h3>Relevance gate</h3>
+      <p style="color:var(--muted);font-size:13.5px;margin:0">
+        Drops results whose title shares no token with your query AND contains no Latin/CJK characters
+        — catches Russian / Arabic / unrelated-language releases that flood Nyaa.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Neural fallback</h3>
+      <p style="color:var(--muted);font-size:13.5px;margin:0">
+        If the top-10 NN-ranked results have &lt;30% token overlap with your query, ANITorr automatically
+        falls back to seeder-sort. You'll see a yellow warning in the CLI when it triggers.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Manga ===== -->
+<section id="manga" class="section">
+  <h2><span class="num">5</span>Manga flow</h2>
+  <p class="muted">Same shape as anime: query → series picker → chapter table → format → autocrop? → background download. Outputs CBZ / ZIP / EPUB / PDF with proper metadata.</p>
+
+  <div class="terminal full" id="t-cli-manga" data-script="1">
+    <div class="term-bar">
+      <span class="sq"></span><span class="sq sm"></span><span class="sq sm"></span>
+      <span class="path">~ / anitorr — manga</span>
+      <button class="replay">replay</button>
+    </div>
+  </div>
+
+  <div class="two reveal" style="margin-top:30px">
+    <div class="card">
+      <h3>EPUB metadata</h3>
+      <p style="color:var(--muted);font-size:13px;margin:0">
+        Apple Books, Calibre, KOReader and Kindle all read these fields:
+      </p>
+      <ul class="bul">
+        <li><b>dc:identifier</b> — UUID, unique per export</li>
+        <li><b>dc:title / creator / language / date</b></li>
+        <li><b>rendition:layout: pre-paginated</b> — Apple Books spread mode</li>
+        <li><b>rendition:orientation: portrait</b></li>
+        <li><b>ibooks:specified-fonts: true</b></li>
+        <li><b>calibre:series + calibre:series_index</b></li>
+        <li>Cover with <code>properties="cover-image"</code></li>
+        <li>RTL page progression by default; LTR for webtoons</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Sources (13)</h3>
+      <p style="color:var(--muted);font-size:13px">
+        <span class="kbd">mangadex</span> <span class="kbd">manganato</span> <span class="kbd">mangakakalot</span>
+        <span class="kbd">mangapark</span> <span class="kbd">mangafox</span> <span class="kbd">batoto</span>
+        <span class="kbd">hitomi</span> <span class="kbd">webtoons</span> <span class="kbd">tappytoon</span>
+        <span class="kbd">mangaplus</span> <span class="kbd">asurascans</span> <span class="kbd">reaperscans</span>
+        <span class="kbd">flamescans</span>
+      </p>
+      <p style="color:var(--muted);font-size:12.5px;margin-top:10px">
+        Override or extend by dropping a Python file in <code>plugins/manga/</code> that exports
+        <code>search</code>, <code>chapters</code>, <code>pages</code>.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Settings ===== -->
+<section id="settings" class="section alt">
+  <h2><span class="num">6</span>Settings</h2>
+  <p class="muted">Interactive table editor in the CLI. Auto-saves to <code>config.json</code> on every change.</p>
+
+  <div class="terminal full" id="t-cli-settings" data-script="1">
+    <div class="term-bar">
+      <span class="sq"></span><span class="sq sm"></span><span class="sq sm"></span>
+      <span class="path">~ / anitorr — settings</span>
+      <button class="replay">replay</button>
+    </div>
+  </div>
+
+  <p class="muted" style="margin-top:20px">
+    The web UI mirrors this exactly under <code>/settings</code> — every config key is editable,
+    debounced auto-save by default, with a Force-save button and <code>Ctrl+S</code> shortcut.
+  </p>
+</section>
+
+<!-- ===== TUI ===== -->
+<section id="tui" class="section">
+  <h2><span class="num">7</span>TUI</h2>
+  <p class="muted">Full-screen Textual app with three tabs. Pastel pink accents on a dark background — no white anywhere.</p>
+
+  <div class="terminal full" id="t-tui" data-script="1">
+    <div class="term-bar">
+      <span class="sq"></span><span class="sq sm"></span><span class="sq sm"></span>
+      <span class="path">~ / anitorr --tui</span>
+      <button class="replay">replay</button>
+    </div>
+  </div>
+
+  <div class="two reveal" style="margin-top:30px">
+    <div class="card">
+      <h3>Bindings</h3>
+      <table class="ref">
+        <tr><td><span class="kbd">/</span></td><td>Focus search</td></tr>
+        <tr><td><span class="kbd">Enter</span></td><td>Run query</td></tr>
+        <tr><td><span class="kbd">↑↓</span></td><td>Navigate rows</td></tr>
+        <tr><td><span class="kbd">d</span></td><td>Send to qBittorrent</td></tr>
+        <tr><td><span class="kbd">c</span></td><td>Copy magnet</td></tr>
+        <tr><td><span class="kbd">r</span></td><td>Re-search</td></tr>
+        <tr><td><span class="kbd">Ctrl</span>+<span class="kbd">L</span></td><td>Toggle theme</td></tr>
+        <tr><td><span class="kbd">q</span></td><td>Quit</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Tabs</h3>
+      <ul class="bul">
+        <li><b>Anime</b> — search + quality select + DataTable + status bar</li>
+        <li><b>Manga</b> — search + format picker + DataTable</li>
+        <li><b>Settings</b> — live editable key/value DataTable</li>
+      </ul>
+      <p style="color:var(--muted);font-size:12.5px;margin-top:10px">
+        Header bar is solid <code>#ec2a6a</code> pink; panels <code>#25252b</code>; rows zebra-stripe
+        <code>#1f1f24 / #25252b</code>; cursor row <code>#3a1726</code>.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== One-liner ===== -->
+<section id="oneliner" class="section alt">
+  <h2><span class="num">8</span>One-liner mode</h2>
+  <p class="muted">Skip every prompt. Pipe through CI, cron, scripts, or just chain it.</p>
+
+  <div class="terminal full" id="t-oneliner" data-script="1">
+    <div class="term-bar">
+      <span class="sq"></span><span class="sq sm"></span><span class="sq sm"></span>
+      <span class="path">~ / anitorr — one-liner</span>
+      <button class="replay">replay</button>
+    </div>
+  </div>
+
+  <h3 style="max-width:1100px;margin:30px auto 10px">Flag reference</h3>
+  <table class="ref wide reveal">
+    <tr><th>Flag</th><th>Type</th><th>Description</th></tr>
+    <tr><td><code>-q, --query</code></td><td>string</td><td>Anime title (skips the interactive prompt)</td></tr>
+    <tr><td><code>-r, --res</code></td><td>480 / 720 / 1080 / 2160</td><td>Quality filter</td></tr>
+    <tr><td><code>-l, --lang</code></td><td>en / jp / es / fr / multi</td><td>Language preference</td></tr>
+    <tr><td><code>-g, --group</code></td><td>string</td><td>Preferred fansub group</td></tr>
+    <tr><td><code>-s, --source</code></td><td>nyaa / anidex / tosho / all</td><td>Restrict to one tracker</td></tr>
+    <tr><td><code>-b, --batch</code></td><td>flag</td><td>Prefer season packs / batches</td></tr>
+    <tr><td><code>-a, --auto</code></td><td>flag</td><td>Auto-pick the top NN-ranked result</td></tr>
+    <tr><td><code>-t, --theme</code></td><td>pastel / dracula / nord / mono</td><td>Color theme</td></tr>
+    <tr><td><code>--tui</code></td><td>flag</td><td>Launch the Textual TUI instead</td></tr>
+    <tr><td><code>--manga</code></td><td>flag</td><td>Skip the mode picker → manga flow</td></tr>
+    <tr><td><code>--settings</code></td><td>flag</td><td>Skip the mode picker → settings editor</td></tr>
+    <tr><td><code>--client</code></td><td>qbit / deluge / transmission / file / magnet</td><td>Where to send the torrent</td></tr>
+    <tr><td><code>--export</code></td><td>json / csv</td><td>Dump results to a file</td></tr>
+    <tr><td><code>--module &lt;name&gt;</code></td><td>string</td><td>Run a custom .module command</td></tr>
+    <tr><td><code>--param k=v</code></td><td>repeatable</td><td>Pass parameters to the module</td></tr>
+  </table>
+</section>
+
+<!-- ===== API ===== -->
+<section id="api" class="section">
+  <h2><span class="num">9</span>HTTP API</h2>
+  <p class="muted">Every web UI page is backed by these endpoints. Use them from curl, scripts, or your own front-end.</p>
+
+  <div class="terminal full" id="t-api" data-script="1">
+    <div class="term-bar">
+      <span class="sq"></span><span class="sq sm"></span><span class="sq sm"></span>
+      <span class="path">~ / curl example</span>
+      <button class="replay">replay</button>
+    </div>
+  </div>
+
+  <h3 style="max-width:1100px;margin:30px auto 10px">Endpoints (49 total)</h3>
+  <table class="ref wide reveal">
+    <tr><th>Method</th><th>Path</th><th>Description</th></tr>
+    <tr><td>GET</td><td><code>/</code></td><td>Dashboard</td></tr>
+    <tr><td>GET</td><td><code>/library</code></td><td>Library overview</td></tr>
+    <tr><td>GET</td><td><code>/reports</code></td><td>Live activity log</td></tr>
+    <tr><td>GET</td><td><code>/favorites</code></td><td>Favorites page</td></tr>
+    <tr><td>GET</td><td><code>/recent</code></td><td>Recent history</td></tr>
+    <tr><td>GET</td><td><code>/downloads</code></td><td>Downloads folder</td></tr>
+    <tr><td>GET</td><td><code>/notifications</code></td><td>Notification inbox</td></tr>
+    <tr><td>GET</td><td><code>/manga</code></td><td>Manga browser</td></tr>
+    <tr><td>GET</td><td><code>/manga/&lt;source&gt;/&lt;slug&gt;</code></td><td>Series detail + chapters</td></tr>
+    <tr><td>GET</td><td><code>/browse/&lt;category&gt;</code></td><td>11 pre-baked category browse pages</td></tr>
+    <tr><td>GET</td><td><code>/stats</code></td><td>Ranker introspection</td></tr>
+    <tr><td>GET</td><td><code>/modules</code></td><td>Custom blocks runner</td></tr>
+    <tr><td>GET</td><td><code>/settings</code></td><td>Live config editor</td></tr>
+    <tr><td>GET</td><td><code>/help</code></td><td>Inline docs</td></tr>
+    <tr><td>GET</td><td><code>/api/search?q=…</code></td><td>Ranked torrent list + meta + nn_quality</td></tr>
+    <tr><td>GET</td><td><code>/api/search/stream?q=…</code></td><td>SSE per-source batches</td></tr>
+    <tr><td>GET</td><td><code>/api/autocomplete?q=…</code></td><td>Title suggestions from MAL</td></tr>
+    <tr><td>GET</td><td><code>/api/meta?q=…</code></td><td>AniList + MAL combined</td></tr>
+    <tr><td>POST</td><td><code>/api/pick</code></td><td>Train ranker on a chosen result</td></tr>
+    <tr><td>GET</td><td><code>/api/torrent_files?url=…</code></td><td>List files inside a torrent page</td></tr>
+    <tr><td>POST</td><td><code>/api/download</code></td><td>Send to qBit / save .torrent / save .magnet</td></tr>
+    <tr><td>GET / POST</td><td><code>/api/config</code></td><td>Read / write full config.json</td></tr>
+    <tr><td>GET</td><td><code>/api/stats</code></td><td>NN weights + history</td></tr>
+    <tr><td>POST</td><td><code>/api/stats/reset</code></td><td>Wipe weights</td></tr>
+    <tr><td>POST</td><td><code>/api/cache/clear</code></td><td>Empty TTL cache</td></tr>
+    <tr><td>POST</td><td><code>/api/qbit/test</code></td><td>Ping qBittorrent</td></tr>
+    <tr><td>GET / POST / DELETE</td><td><code>/api/history</code></td><td>Pick history</td></tr>
+    <tr><td>GET / POST / DELETE</td><td><code>/api/favorites</code></td><td>Favorites</td></tr>
+    <tr><td>POST</td><td><code>/api/downloads/delete</code></td><td>Remove a saved file</td></tr>
+    <tr><td>GET</td><td><code>/api/analytics/summary</code></td><td>By-group / by-resolution / timeline</td></tr>
+    <tr><td>GET</td><td><code>/api/analytics/downloads</code></td><td>Saved file index</td></tr>
+    <tr><td>GET</td><td><code>/api/library/summary</code></td><td>Powers /library</td></tr>
+    <tr><td>GET / DELETE</td><td><code>/api/logs</code></td><td>Tail / clear log</td></tr>
+    <tr><td>GET</td><td><code>/api/notifications</code></td><td>All notifications</td></tr>
+    <tr><td>GET</td><td><code>/api/notifications/unread</code></td><td>Unread count + items</td></tr>
+    <tr><td>POST</td><td><code>/api/notifications/read</code></td><td>Mark one or all read</td></tr>
+    <tr><td>DELETE</td><td><code>/api/notifications</code></td><td>Clear inbox</td></tr>
+    <tr><td>POST</td><td><code>/api/notify/test</code></td><td>Fire test on Discord / ntfy / Telegram</td></tr>
+    <tr><td>GET</td><td><code>/api/manga/search?q=…</code></td><td>Aggregated manga search</td></tr>
+    <tr><td>GET</td><td><code>/api/manga/chapters?source=&amp;url=</code></td><td>Chapter list</td></tr>
+    <tr><td>GET</td><td><code>/api/manga/pages?source=&amp;url=</code></td><td>Page image URLs</td></tr>
+    <tr><td>POST</td><td><code>/api/manga/download</code></td><td>Start a packaging job</td></tr>
+    <tr><td>POST</td><td><code>/api/manga/download/by-url</code></td><td>Download a single URL</td></tr>
+    <tr><td>GET</td><td><code>/api/manga/jobs</code></td><td>All active/done jobs</td></tr>
+    <tr><td>GET</td><td><code>/api/manga/job/&lt;id&gt;</code></td><td>Single job status</td></tr>
+    <tr><td>GET</td><td><code>/api/modules</code></td><td>List discovered .module blocks</td></tr>
+    <tr><td>POST</td><td><code>/api/modules/run</code></td><td>Execute one with params</td></tr>
+    <tr><td>GET / POST</td><td><code>/api/dashboard/widgets</code></td><td>Persisted widget visibility</td></tr>
+    <tr><td>GET</td><td><code>/favicon.ico</code></td><td>Square pink SVG favicon</td></tr>
+  </table>
+</section>
+
+<!-- ===== Neural net ===== -->
+<section id="nn" class="section alt">
+  <h2><span class="num">10</span>How the ranker learns</h2>
+  <p class="muted">Every time you pick a result, ANITorr nudges its weights toward the picked features and away from the others. Watch the math happen below.</p>
+
+  <div class="terminal full" id="t-nn" data-script="1">
+    <div class="term-bar">
+      <span class="sq"></span><span class="sq sm"></span><span class="sq sm"></span>
+      <span class="path">~ / ranker</span>
+      <button class="replay">replay</button>
+    </div>
+  </div>
+
+  <div class="two reveal" style="margin-top:30px">
+    <div class="card">
+      <h3>The model</h3>
+      <ul class="bul">
+        <li><b>seeders</b> — log-scaled health</li>
+        <li><b>resolution</b> — bucketed 2160/1080/720/480</li>
+        <li><b>group_trust</b> — boolean trust list</li>
+        <li><b>size_efficiency</b> — smaller @ same res = better</li>
+        <li><b>prompt_match</b> — token overlap vs query</li>
+        <li><b>codec</b> — x265 / AV1 weighted higher</li>
+        <li><b>batch</b> — season pack flag</li>
+        <li><b>bias</b></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>The loop</h3>
+      <ol class="bul">
+        <li>You search → backend fans out to every source</li>
+        <li>Relevance gate drops unrelated-language releases</li>
+        <li>Ranker scores every row → sorts descending</li>
+        <li>NN quality is sampled. If &lt;30%, fall back to seeder sort</li>
+        <li>You click one → label=1 for that row, 0 for others</li>
+        <li>SGD step nudges weights by <code>learning_rate</code></li>
+        <li>Weights + last 500 picks persist to <code>data/nn_cache.json</code></li>
+        <li>Next search uses the updated weights — your taste compounds</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ===== .module ===== -->
+<section id="modules" class="section">
+  <h2><span class="num">11</span>.module custom blocks</h2>
+  <p class="muted">Scratch-style custom commands. Drop a <code>.module</code> + paired <code>.py</code> in <code>/modules</code> and they auto-appear in the CLI <code>--module</code> flag and at <code>/modules</code>.</p>
+
+  <div class="terminal full" id="t-module" data-script="1">
+    <div class="term-bar">
+      <span class="sq"></span><span class="sq sm"></span><span class="sq sm"></span>
+      <span class="path">~ / .module syntax</span>
+      <button class="replay">replay</button>
+    </div>
+  </div>
+
+  <h3 style="max-width:1100px;margin:30px auto 10px">Field reference</h3>
+  <table class="ref wide reveal">
+    <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+    <tr><td><code>name</code></td><td>string</td><td>yes</td><td>Identifier passed to <code>--module NAME</code></td></tr>
+    <tr><td><code>description</code></td><td>string</td><td>yes</td><td>Shown on <code>/modules</code> and in CLI listings</td></tr>
+    <tr><td><code>category</code></td><td>string</td><td>no</td><td>Free-text grouping label</td></tr>
+    <tr><td><code>params</code></td><td>list of {name, type, default}</td><td>no</td><td>Each parameter becomes a CLI flag and a web input</td></tr>
+    <tr><td><code>params[].type</code></td><td>string / int / float / bool</td><td>—</td><td>Auto-coerced before function call</td></tr>
+    <tr><td><code>entry</code></td><td>filename</td><td>yes</td><td>Python file in same folder</td></tr>
+    <tr><td><code>function</code></td><td>string</td><td>no</td><td>Function name (default <code>run</code>)</td></tr>
+  </table>
+</section>
+
+<!-- ===== plugins ===== -->
+<section id="plugins" class="section alt">
+  <h2><span class="num">12</span>Plugins</h2>
+  <p class="muted">Want to add a new manga source? Drop a Python file. Want to override mangadex? Same filename wins.</p>
+
+  <div class="terminal full" id="t-plugin" data-script="1">
+    <div class="term-bar">
+      <span class="sq"></span><span class="sq sm"></span><span class="sq sm"></span>
+      <span class="path">~ / plugins/manga</span>
+      <button class="replay">replay</button>
+    </div>
+  </div>
+
+  <p class="muted" style="margin-top:20px">
+    A plugin must export three callables of the same shape as the built-in sources:
+  </p>
+  <table class="ref wide reveal">
+    <tr><th>Function</th><th>Args</th><th>Returns</th></tr>
+    <tr><td><code>search(query)</code></td><td>string</td><td>list of <code>{title, slug, source, cover, url, status, lang, year, tags}</code></td></tr>
+    <tr><td><code>chapters(url)</code></td><td>series URL</td><td>list of <code>{title, number, url, pages}</code></td></tr>
+    <tr><td><code>pages(chapter_url)</code></td><td>chapter URL</td><td>list of page image URLs</td></tr>
+  </table>
+</section>
+
+<!-- ===== Function reference ===== -->
+<section id="refs" class="section">
+  <h2><span class="num">13</span>Function reference</h2>
+  <p class="muted">Public Python functions you can import directly. Useful for scripts, notebooks, and modules.</p>
+
+  <h3 style="max-width:1100px;margin:20px auto 6px">backend.sources</h3>
+  <table class="ref wide">
+    <tr><th>Function</th><th>Signature</th><th>Description</th></tr>
+    <tr><td><code>aggregate</code></td><td>(query, enabled, cors_proxy, ddl_enabled, min_results=5, max_threads=12)</td><td>Parallel fan-out across all enabled trackers + DDL fallbacks</td></tr>
+    <tr><td><code>fetch_nyaa</code></td><td>(query, cors_proxy=None, limit=75)</td><td>Scrape nyaa.si listings</td></tr>
+    <tr><td><code>fetch_anidex</code></td><td>(query)</td><td>Scrape anidex.info</td></tr>
+    <tr><td><code>fetch_tokyotosho</code></td><td>(query)</td><td>RSS feed</td></tr>
+    <tr><td><code>fetch_subsplease</code></td><td>(query)</td><td>JSON API</td></tr>
+    <tr><td><code>fetch_erai</code></td><td>(query)</td><td>RSS feed</td></tr>
+    <tr><td><code>fetch_animetosho</code></td><td>(query)</td><td>HTML scraper</td></tr>
+    <tr><td><code>fetch_shana</code></td><td>(query)</td><td>shanaproject.com</td></tr>
+    <tr><td><code>fetch_anirena</code></td><td>(query)</td><td>WordPress feed</td></tr>
+    <tr><td><code>parse_tags</code></td><td>(title) → dict</td><td>Extract resolution / codec / audio / group / batch / episode</td></tr>
+    <tr><td><code>size_to_bytes</code></td><td>("1.5 GiB") → int</td><td>Parse a human-readable size</td></tr>
+  </table>
+
+  <h3 style="max-width:1100px;margin:30px auto 6px">backend.neural</h3>
+  <table class="ref wide">
+    <tr><td><code>Ranker(trusted_groups, lr)</code></td><td>—</td><td>Construct a fresh ranker (loads weights from cache)</td></tr>
+    <tr><td><code>.rank(rows, query)</code></td><td>→ sorted list</td><td>Decorates each row with <code>nn_score</code> and <code>nn_rank</code></td></tr>
+    <tr><td><code>.teach(picked, shown, query)</code></td><td>→ None</td><td>One SGD step (label=1 for picked, 0 for others)</td></tr>
+    <tr><td><code>.score(row, query)</code></td><td>→ float</td><td>Raw logit</td></tr>
+    <tr><td><code>.features(row, query)</code></td><td>→ dict</td><td>Extract the 7 features</td></tr>
+    <tr><td><code>.stats()</code></td><td>→ dict</td><td><code>{samples, weights, recent}</code></td></tr>
+  </table>
+
+  <h3 style="max-width:1100px;margin:30px auto 6px">backend.metadata</h3>
+  <table class="ref wide">
+    <tr><td><code>anilist_lookup(query)</code></td><td>→ dict or None</td><td>GraphQL fetch — title/score/episodes/cover</td></tr>
+    <tr><td><code>mal_lookup(query)</code></td><td>→ dict or None</td><td>Jikan v4 fallback</td></tr>
+    <tr><td><code>autocomplete(query)</code></td><td>→ list[str]</td><td>Up to 8 title suggestions</td></tr>
+    <tr><td><code>title_variants(query, meta)</code></td><td>→ list[str]</td><td>Romaji + English + Native + normalized</td></tr>
+    <tr><td><code>ai_normalize(query, ai_cfg)</code></td><td>→ list[str]</td><td>Ollama / OpenAI-compatible expansion</td></tr>
+  </table>
+
+  <h3 style="max-width:1100px;margin:30px auto 6px">backend.clients</h3>
+  <table class="ref wide">
+    <tr><td><code>QBitClient(host, user, password, category, save_path)</code></td><td>—</td><td>qBittorrent Web API wrapper</td></tr>
+    <tr><td><code>.login()</code></td><td>→ bool</td><td>Authenticate and cache cookie</td></tr>
+    <tr><td><code>.add(magnet_or_url, paused=False)</code></td><td>→ bool</td><td>Send torrent to client</td></tr>
+    <tr><td><code>save_torrent_file(url, dest_dir)</code></td><td>→ path or None</td><td>Download a .torrent file</td></tr>
+    <tr><td><code>magnet_to_file(magnet, dest_dir, name)</code></td><td>→ path</td><td>Persist a magnet as a .magnet file</td></tr>
+  </table>
+
+  <h3 style="max-width:1100px;margin:30px auto 6px">backend.manga_sources</h3>
+  <table class="ref wide">
+    <tr><td><code>search_all(query, enabled)</code></td><td>→ list</td><td>Parallel multi-source search</td></tr>
+    <tr><td><code>get_chapters(source, url)</code></td><td>→ list</td><td>Chapter list for a series</td></tr>
+    <tr><td><code>get_pages(source, chapter_url)</code></td><td>→ list[str]</td><td>Image URLs for a chapter</td></tr>
+    <tr><td><code>SOURCES</code></td><td>dict</td><td>Registry of <code>name → (search, chapters, pages)</code></td></tr>
+  </table>
+
+  <h3 style="max-width:1100px;margin:30px auto 6px">backend.manga_dl</h3>
+  <table class="ref wide">
+    <tr><td><code>start_job(title, source, page_urls, fmt, out_dir, …)</code></td><td>→ job_id</td><td>Background download + package</td></tr>
+    <tr><td><code>get_job(job_id)</code></td><td>→ dict</td><td>Progress / status / path / error</td></tr>
+    <tr><td><code>list_jobs()</code></td><td>→ list</td><td>All known jobs (most-recent-first)</td></tr>
+    <tr><td><code>download_by_url(url, fmt, out_dir, *, title, autocrop)</code></td><td>→ job_id</td><td>Detect source then start a job</td></tr>
+  </table>
+
+  <h3 style="max-width:1100px;margin:30px auto 6px">backend.interpreter</h3>
+  <table class="ref wide">
+    <tr><td><code>discover()</code></td><td>→ list[ModuleSpec]</td><td>Scan <code>modules/*.module</code></td></tr>
+    <tr><td><code>find(name)</code></td><td>→ ModuleSpec or None</td><td>Lookup by name</td></tr>
+    <tr><td><code>ModuleSpec.call(**kwargs)</code></td><td>→ anything</td><td>Invoke the paired Python function</td></tr>
+  </table>
+
+  <h3 style="max-width:1100px;margin:30px auto 6px">backend.notify</h3>
+  <table class="ref wide">
+    <tr><td><code>discord(webhook_url, content, title)</code></td><td>→ bool</td><td>POST to a Discord webhook</td></tr>
+    <tr><td><code>ntfy(url, topic, msg, title)</code></td><td>→ bool</td><td>POST to ntfy.sh-style server</td></tr>
+    <tr><td><code>telegram(token, chat_id, msg)</code></td><td>→ bool</td><td>POST to Telegram bot API</td></tr>
+  </table>
+</section>
+
+<!-- ===== config.json ===== -->
+<section id="config" class="section alt">
+  <h2><span class="num">14</span>config.json reference</h2>
+  <p class="muted">Every key, every default. Edit at <code>/settings</code> or directly on disk.</p>
+  <table class="ref wide">
+    <tr><th>Key</th><th>Default</th><th>Description</th></tr>
+    <tr><td><code>theme</code></td><td>cream</td><td>One of cream / dark / dracula / nord / solarized / mono</td></tr>
+    <tr><td><code>language</code></td><td>en</td><td>UI language</td></tr>
+    <tr><td><code>default_resolution</code></td><td>1080p</td><td>Pre-selected on the dashboard</td></tr>
+    <tr><td><code>default_lang</code></td><td>en</td><td>Pre-selected language</td></tr>
+    <tr><td><code>min_seeders</code></td><td>1</td><td>Hard-filter cutoff</td></tr>
+    <tr><td><code>aggregator_threshold</code></td><td>5</td><td>If fewer torrent results, fall back to DDL APIs</td></tr>
+    <tr><td><code>cache_ttl_seconds</code></td><td>600</td><td>Per-query result cache</td></tr>
+    <tr><td><code>max_threads</code></td><td>12</td><td>Parallel source workers</td></tr>
+    <tr><td><code>cors_proxy_url</code></td><td>http://localhost:8787</td><td>Node CORS proxy</td></tr>
+    <tr><td><code>neural_network.enabled</code></td><td>true</td><td>Toggle the ranker</td></tr>
+    <tr><td><code>neural_network.learning_rate</code></td><td>0.05</td><td>SGD step size</td></tr>
+    <tr><td><code>neural_network.feature_weights</code></td><td>{…}</td><td>Initial weights for each feature</td></tr>
+    <tr><td><code>sources.*</code></td><td>true / false</td><td>Per-tracker toggle (8 keys)</td></tr>
+    <tr><td><code>ddl_sources.*</code></td><td>true / false</td><td>Per-DDL toggle (10 keys)</td></tr>
+    <tr><td><code>manga_sources.*</code></td><td>true / false</td><td>Per-manga-source toggle (13 keys)</td></tr>
+    <tr><td><code>trusted_groups</code></td><td>["SubsPlease",…]</td><td>NN trust list</td></tr>
+    <tr><td><code>qbittorrent.*</code></td><td>{…}</td><td>host / user / password / category / save_path</td></tr>
+    <tr><td><code>discord_webhook.*</code></td><td>{enabled, url}</td><td>Push notifications</td></tr>
+    <tr><td><code>ntfy.*</code></td><td>{enabled, url, topic}</td><td>Push notifications</td></tr>
+    <tr><td><code>telegram.*</code></td><td>{enabled, token, chat_id}</td><td>Push notifications</td></tr>
+    <tr><td><code>ai.ollama_url</code></td><td>http://localhost:11434</td><td>Local Ollama endpoint</td></tr>
+    <tr><td><code>ai.ollama_model</code></td><td>llama3</td><td>Model name</td></tr>
+    <tr><td><code>ai.openai_compatible_url</code></td><td>""</td><td>e.g. https://api.openai.com/v1</td></tr>
+    <tr><td><code>ai.openai_api_key</code></td><td>""</td><td>API key</td></tr>
+    <tr><td><code>ai.openai_model</code></td><td>gpt-4o-mini</td><td>Model name</td></tr>
+    <tr><td><code>ai.use_for_title_normalization</code></td><td>true</td><td>Master toggle for AI variants</td></tr>
+    <tr><td><code>manga.default_format</code></td><td>cbz</td><td>cbz / zip / epub / pdf</td></tr>
+    <tr><td><code>manga.autocrop</code></td><td>false</td><td>Trim near-white borders</td></tr>
+    <tr><td><code>manga.save_path</code></td><td>""</td><td>Empty = ./manga</td></tr>
+    <tr><td><code>manga.metadata_format</code></td><td>apple_books</td><td>apple_books / calibre / plain</td></tr>
+    <tr><td><code>manga.page_progression</code></td><td>rtl</td><td>rtl for manga, ltr for webtoons</td></tr>
+    <tr><td><code>manga.embed_cover</code></td><td>true</td><td>Insert <code>cover-image</code> property</td></tr>
+    <tr><td><code>plugins.*</code></td><td>true / false</td><td>40+ feature flags — every feature is a toggle</td></tr>
+  </table>
+</section>
+
+<footer class="footer">
+  <div class="brand">
+    <span class="sq"></span><span class="brand-name">ANITorr</span>
+  </div>
+  <div class="muted">No trackers. No telemetry. Self-hosted, plugin-driven, learn-by-clicking.</div>
+  <div class="muted small">© 2026 · MIT</div>
+</footer>
+
+<script src="assets/docs.js"></script>
+</body>
+</html>

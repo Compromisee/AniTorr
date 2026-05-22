@@ -1,0 +1,87 @@
+{% extends "_base.html" %}
+{% block layout_extra %} no-right{% endblock %}
+{% block body %}
+<header class="top">
+  <div class="searchbar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 2-2.5 2-2.5 4"/></svg>
+    <input id="helpQ" placeholder="Search documentation…" autocomplete="off">
+  </div>
+</header>
+
+<section class="main">
+  <div class="headline">
+    <div>
+      <h1>Help &amp; documentation</h1>
+      <div style="color:var(--muted);font-size:13px;margin-top:6px">
+        Self-hosted docs · also published at <a href="/docs" style="color:var(--accent)">/docs</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card help-card">
+      <h3>Keyboard shortcuts</h3>
+      <table class="ref" style="width:100%;font-size:13px">
+        <tr><td><span class="kbd">/</span></td><td>Focus search bar</td></tr>
+        <tr><td><span class="kbd">Enter</span></td><td>Run search</td></tr>
+        <tr><td><span class="kbd">Alt</span>+<span class="kbd">R</span></td><td>Re-search</td></tr>
+        <tr><td><span class="kbd">Esc</span></td><td>Close modals</td></tr>
+        <tr><td><span class="kbd">click row</span></td><td>Add to compare</td></tr>
+      </table>
+    </div>
+    <div class="card help-card">
+      <h3>Categories ({{ categories|length }})</h3>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        {% for k, v in categories.items() %}
+        <a class="filter-btn" href="/browse/{{ k }}" style="justify-content:flex-start">{{ v[0] }}</a>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="card help-card">
+      <h3>Manga sources ({{ manga_sources|length }})</h3>
+      <div class="tags">
+        {% for s in manga_sources %}<span class="tag">{{ s }}</span>{% endfor %}
+      </div>
+      <p style="color:var(--muted);font-size:12.5px;margin-top:10px">
+        Drop a Python file in <span class="kbd">plugins/manga/</span> exposing
+        <span class="kbd">search</span>, <span class="kbd">chapters</span>,
+        <span class="kbd">pages</span> to add your own.
+      </p>
+    </div>
+    <div class="card help-card">
+      <h3>HTTP API quick reference</h3>
+      <table class="ref" style="width:100%;font-size:12px">
+        <tr><td><code>/api/search?q=</code></td><td>Search torrents</td></tr>
+        <tr><td><code>/api/manga/search?q=</code></td><td>Search manga</td></tr>
+        <tr><td><code>/api/manga/download</code></td><td>POST {title, pages, fmt}</td></tr>
+        <tr><td><code>/api/manga/download/by-url</code></td><td>POST {url, fmt}</td></tr>
+        <tr><td><code>/api/notifications</code></td><td>List / clear / mark read</td></tr>
+        <tr><td><code>/api/config</code></td><td>GET / POST full config</td></tr>
+        <tr><td><code>/api/dashboard/widgets</code></td><td>Customize dashboard</td></tr>
+      </table>
+    </div>
+    <div class="card help-card">
+      <h3>Manga export formats</h3>
+      <ul style="margin:6px 0 0;padding-left:18px;color:var(--ink-soft);font-size:13.5px;line-height:1.7">
+        <li><b>CBZ</b> — opens in any comic reader</li>
+        <li><b>ZIP</b> — plain image archive</li>
+        <li><b>EPUB</b> — Apple Books / Calibre / KOReader compatible.
+            Pre-paginated, RTL spread by default, includes
+            <span class="kbd">dc:identifier</span>,
+            <span class="kbd">calibre:series</span>,
+            <span class="kbd">ibooks:specified-fonts</span>.</li>
+        <li><b>PDF</b> — one image per page, sized to original</li>
+      </ul>
+    </div>
+    <div class="card help-card">
+      <h3>CLI</h3>
+<pre style="background:var(--panel-2);padding:10px;border-radius:10px;font-size:11.5px;overflow:auto;margin:0">anitorr -q "Frieren" -r 1080 --auto
+anitorr --tui
+anitorr --module season_pack --param title="Bocchi"</pre>
+    </div>
+  </div>
+</section>
+
+<div class="toasts" id="toasts"></div>
+{% endblock %}
+{% block scripts %}<script>window.__HELP_PAGE = true;</script>{% endblock %}

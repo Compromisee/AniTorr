@@ -1,0 +1,80 @@
+{% extends "_base.html" %}
+{% block layout_extra %} no-right{% endblock %}
+{% block body %}
+<header class="top">
+  <div class="searchbar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>
+    <input id="browseQ" placeholder="Refine within this category…" value="{{ default_query }}" autocomplete="off">
+    <span class="kbd">Enter</span>
+  </div>
+  <div class="top-actions">
+    <a class="iconbtn" href="/" title="Back to dashboard">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+    </a>
+  </div>
+</header>
+
+<section class="main">
+  <div class="headline">
+    <div>
+      <h1>{{ title }}</h1>
+      <div style="color:var(--muted);font-size:13px;margin-top:6px">{{ description }}</div>
+    </div>
+    <div class="toggle">
+      <span>Auto-run on load</span>
+      <div class="switch" id="autoRun"></div>
+    </div>
+  </div>
+
+  <div class="row-cards" id="filterChips" style="grid-template-columns: repeat(auto-fill, minmax(160px,1fr))">
+    {% if filters.res %}<div class="card"><b>Res</b><span class="pct">{{ filters.res }}</span></div>{% endif %}
+    {% if filters.batch %}<div class="card"><b>Batch only</b><span class="pct">on</span></div>{% endif %}
+    {% if filters._kind %}<div class="card"><b>Data source</b><span class="pct">{{ filters._kind }}</span></div>{% endif %}
+    <div class="card"><b>Query</b><span class="pct" id="curQ">{{ default_query or '—' }}</span></div>
+  </div>
+
+  <div id="browseBody">
+    {% if filters._kind == 'favorites' %}
+      <div class="card empty" id="placeholder">Loading favorites…</div>
+    {% elif filters._kind == 'history' or filters._kind == 'searches' %}
+      <div class="card empty" id="placeholder">Loading history…</div>
+    {% elif filters._kind == 'downloads' or filters._kind == 'download_duration' %}
+      <div class="card empty" id="placeholder">Loading downloads…</div>
+    {% elif filters._kind == 'picks' %}
+      <div class="card empty" id="placeholder">Loading picks…</div>
+    {% else %}
+      <div class="results">
+        <div class="results-header">
+          <h2>Torrents</h2>
+          <span class="count" id="resCount">—</span>
+          <div class="grow"></div>
+          <button class="filter-btn" id="runBtn">Run query</button>
+          <button class="filter-btn" id="csvBtn">CSV</button>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="results-table">
+            <thead><tr>
+              <th>Title</th><th>Source</th><th>Group</th><th>Res</th><th>Size</th><th>S/L</th><th>NN</th><th style="text-align:right">Actions</th>
+            </tr></thead>
+            <tbody id="rows">
+              <tr><td colspan="8" style="text-align:center;color:var(--muted);padding:30px">
+                Press <span class="kbd">Enter</span> or click <b>Run query</b> to search.
+              </td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<div class="toasts" id="toasts"></div>
+{% endblock %}
+{% block scripts %}
+<script>
+  window.__BROWSE_PAGE = true;
+  window.__BROWSE_FILTERS = {{ filters|tojson }};
+  window.__BROWSE_QUERY   = {{ default_query|tojson }};
+  window.__BROWSE_CATEGORY = {{ category|tojson }};
+</script>
+{% endblock %}

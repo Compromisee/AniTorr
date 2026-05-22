@@ -1,0 +1,7 @@
+name: hello
+description: Greets a name. Demo of the .module custom block system.
+category: utility
+params:
+  - {name: who, type: string, default: world}
+entry: hello.py
+function: run

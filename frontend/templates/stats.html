@@ -1,0 +1,53 @@
+{% extends "_base.html" %}
+{% set active_tab = "stats" %}
+{% block layout_extra %} no-right{% endblock %}
+{% block body %}
+
+<header class="top">
+  <div class="searchbar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg>
+    <input placeholder="Ranker statistics — read only" disabled>
+  </div>
+  <div class="top-actions">
+    <button class="iconbtn" id="refreshStats" title="Refresh">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 3v6h6"/></svg>
+    </button>
+    <button class="iconbtn" id="resetRanker" title="Reset all weights and history">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6v-2a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="main">
+  <div class="headline">
+    <div>
+      <h1>Ranker</h1>
+      <div style="color:var(--muted);font-size:13px;margin-top:6px" id="statsSubtitle">loading…</div>
+    </div>
+  </div>
+
+  <div class="kpis">
+    <div class="card"><div class="kpi-label">Training samples</div><div class="kpi-value" id="kSamples">—</div></div>
+    <div class="card"><div class="kpi-label">Top feature</div><div class="kpi-value" id="kTopFeat">—</div><div class="kpi-row"><span class="pill soft" id="kTopFeatVal">—</span></div></div>
+    <div class="card dark"><div class="kpi-label" style="color:#BDB8B3">Bias</div><div class="kpi-value" id="kBias">—</div></div>
+    <div class="card"><div class="kpi-label">Recent picks</div><div class="kpi-value" id="kRecent">—</div></div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="head"><div style="font-weight:700">Feature weights</div></div>
+      <div id="featWeights"></div>
+    </div>
+    <div class="card">
+      <div class="head"><div style="font-weight:700">Recent picks</div></div>
+      <table class="compare" style="width:100%" id="recentTable">
+        <thead><tr><th>Query</th><th>Group</th><th>Res</th><th>When</th></tr></thead>
+        <tbody><tr><td colspan="4" style="color:var(--muted)">loading…</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="toasts" id="toasts"></div>
+{% endblock %}
+{% block scripts %}<script>window.__STATS_PAGE = true;</script>{% endblock %}

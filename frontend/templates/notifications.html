@@ -1,0 +1,48 @@
+{% extends "_base.html" %}
+{% block layout_extra %} no-right{% endblock %}
+{% block body %}
+<header class="top">
+  <div class="searchbar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/></svg>
+    <input id="notifFilter" placeholder="Filter…" autocomplete="off">
+  </div>
+  <div class="top-actions">
+    <button class="iconbtn" id="markAllRead" title="Mark all read">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 5 5L20 7"/></svg>
+    </button>
+    <button class="iconbtn" id="clearAllNotif" title="Clear all">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="main">
+  <div class="headline">
+    <div>
+      <h1>Notifications</h1>
+      <div style="color:var(--muted);font-size:13px;margin-top:6px">
+        {{ items|length }} total ·
+        {{ items|rejectattr('read')|list|length }} unread
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="padding:0;overflow:hidden" id="notifCard">
+    <div id="notifList">
+      {% for n in items|reverse %}
+      <div class="notif-row{% if not n.read %} unread{% endif %}" data-id="{{ n.id }}" data-text="{{ n.message }}">
+        <span class="notif-kind k-{{ n.kind }}">{{ n.kind }}</span>
+        <span class="notif-msg">{{ n.message }}</span>
+        {% if n.link %}<a class="filter-btn" href="{{ n.link }}">Open</a>{% endif %}
+        <span class="notif-ts">{{ n.ts }}</span>
+      </div>
+      {% else %}
+      <div class="empty">No notifications yet.</div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<div class="toasts" id="toasts"></div>
+{% endblock %}
+{% block scripts %}<script>window.__NOTIF_PAGE = true;</script>{% endblock %}

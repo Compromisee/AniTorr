@@ -1,0 +1,244 @@
+{% extends "_base.html" %}
+{% block body %}
+
+<header class="top">
+  <div class="searchbar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>
+    <input id="globalQ" placeholder='Try "Frieren", "Spy x Family", "Chainsaw Man"…' autocomplete="off" />
+    <span class="kbd">/</span>
+  </div>
+  <div class="top-actions">
+    <button class="iconbtn" id="reSearchBtn" title="Re-search (Alt+R)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 3v6h6"/></svg>
+    </button>
+    <button class="iconbtn" id="exportBtn" title="Export results JSON">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+    </button>
+    <button class="iconbtn" id="shareBtn" title="Copy shareable URL">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 1 0-7-7l-1 1"/><path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 1 0 7 7l1-1"/></svg>
+    </button>
+    <button class="iconbtn" id="customizeBtn" title="Customize widgets">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="5" r="2"/><circle cx="12" cy="19" r="2"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="main">
+
+  <div class="chip-row" id="chipRow">
+    <div class="plus" id="newSearchBtn" title="New search">+</div>
+    <!-- chips render here from localStorage recent queries -->
+  </div>
+
+  <div class="headline">
+    <div>
+      <h1 id="searchTitle">New search</h1>
+      <div style="color:var(--muted);font-size:13px;margin-top:6px" id="searchSubtitle">
+        Type a title above, then press <span class="kbd">Enter</span>.
+      </div>
+    </div>
+    <div class="toggle">
+      <span>Neural ranking</span>
+      <div class="switch" id="nnToggle" title="Toggle NN ranking"></div>
+    </div>
+  </div>
+
+
+  <!-- Widget customize panel (toggled by Customize button) -->
+  <div class="card" id="widgetPanel" style="margin-bottom:14px;display:none">
+    <div class="head">
+      <div style="font-weight:700;font-size:15px">Customize dashboard</div>
+      <span class="pill outline">click to toggle visibility · auto-saves</span>
+    </div>
+    <div class="widget-toggle-list"></div>
+  </div>
+  <style>#widgetPanel.open{display:block}</style>
+  <!-- KPI strip (real numbers wired via JS) -->
+  <div class="kpis" data-widget="kpis-block">
+    <div class="card">
+      <div class="kpi-label">Total seeders<span class="pill outline" id="kpiSeedersBadge">—</span></div>
+      <div class="kpi-value" id="kpiSeeders">0</div>
+      <div class="kpi-row"><span class="pill" id="kpiSeedersDelta">—</span><span style="color:var(--muted);font-size:12.5px">aggregate health</span></div>
+    </div>
+    <div class="card">
+      <div class="kpi-label">Top resolution</div>
+      <div class="kpi-value" id="kpiTopRes">—</div>
+      <div class="kpi-row"><span class="pill soft" id="kpiTopGroup">—</span></div>
+    </div>
+    <div class="card dark">
+      <div class="kpi-label" style="color:#BDB8B3">Smallest 1080p
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M3 12h18"/></svg>
+      </div>
+      <div class="kpi-value" id="kpiBestSize">—</div>
+      <div class="kpi-row"><span class="pill" id="kpiBestGroup">—</span></div>
+    </div>
+    <div class="card">
+      <div class="kpi-label">Sources hit</div>
+      <div class="kpi-value" id="kpiSources">0</div>
+      <div class="kpi-row"><span class="pill warn" id="kpiSourcesDetail">0 active</span></div>
+    </div>
+  </div>
+
+  <!-- Top three result chips (real data) -->
+  <div class="row-cards widget" data-widget="top-three" id="topThree">
+    <div class="card empty" style="grid-column: 1 / -1; padding: 16px; border-radius: var(--radius);">Run a search to see top picks here.</div>
+  </div>
+
+  <!-- Source breakdown + Resolution bars -->
+  <div class="grid-2 widget" data-widget="charts">
+    <div class="card">
+      <div class="head">
+        <div>
+          <div style="color:var(--muted);font-size:12px">By source</div>
+          <div style="font-weight:700;font-size:15px">Results per tracker</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="filter-btn" id="clearSourceFilter">All</button>
+        </div>
+      </div>
+      <div class="platform-list" id="sourceList">
+        <div class="empty" style="border-radius: 12px; padding: 18px;">No results yet.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="head">
+        <div>
+          <div style="color:var(--muted);font-size:12px">Distribution</div>
+          <div style="font-weight:700;font-size:15px">Resolution mix</div>
+        </div>
+        <button class="filter-btn" id="clearResFilter">All</button>
+      </div>
+      <div class="bars" id="resBars">
+        <div class="bar-col"><span class="count">0</span><span class="label">2160p</span></div>
+        <div class="bar-col acc"><span class="count">0</span><span class="label">1080p</span></div>
+        <div class="bar-col"><span class="count">0</span><span class="label">720p</span></div>
+        <div class="bar-col"><span class="count">0</span><span class="label">480p</span></div>
+        <div class="bar-col"><span class="count">0</span><span class="label">other</span></div>
+      </div>
+      <div style="margin-top:14px;color:var(--muted);font-size:12px">
+        Click a bar to filter by resolution.
+      </div>
+    </div>
+  </div>
+
+  <!-- Results table -->
+  <div class="results widget" data-widget="results">
+    <div class="results-header">
+      <h2>Torrents</h2>
+      <span class="count" id="resCount">0 results</span>
+      <div class="grow"></div>
+
+      <div class="dropdown">
+        <button class="filter-btn" id="sortBtn">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M6 12h12M10 18h4"/></svg>
+          <span id="sortLabel">Sort: NN</span>
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="dropdown-menu" id="sortMenu">
+          <div class="opt active" data-sort="nn_score">Neural-net score</div>
+          <div class="opt" data-sort="seeders">Seeders ↓</div>
+          <div class="opt" data-sort="size_asc">Size ↑ smallest</div>
+          <div class="opt" data-sort="size_desc">Size ↓ largest</div>
+          <div class="opt" data-sort="title">Title A–Z</div>
+        </div>
+      </div>
+
+      <div class="dropdown">
+        <button class="filter-btn" id="resFilterBtn">
+          <span id="resFilterLabel">Resolution: any</span>
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="dropdown-menu" id="resFilterMenu">
+          <div class="opt active" data-res="">Any</div>
+          <div class="opt" data-res="2160p">2160p</div>
+          <div class="opt" data-res="1080p">1080p</div>
+          <div class="opt" data-res="720p">720p</div>
+          <div class="opt" data-res="480p">480p</div>
+        </div>
+      </div>
+
+      <button class="filter-btn" id="bulkBtn" title="Send all checked to qBittorrent">Bulk send</button>
+      <button class="filter-btn" id="csvBtn">CSV</button>
+      <button class="save-btn" id="researchBtn">Re-search</button>
+    </div>
+
+    <div style="overflow-x:auto">
+      <table class="results-table">
+        <thead><tr>
+          <th style="width:24px"><input type="checkbox" id="bulkAll"></th>
+          <th>Title</th>
+          <th>Source</th>
+          <th>Group</th>
+          <th>Res</th>
+          <th>Size</th>
+          <th>S / L</th>
+          <th>NN</th>
+          <th style="text-align:right">Actions</th>
+        </tr></thead>
+        <tbody id="rows">
+          <tr><td colspan="9" style="text-align:center;color:var(--muted);padding:30px">No results yet — type a query and press Enter.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<aside class="right">
+  <div class="card" id="animeMeta">
+    <div class="cover" id="animeCover">cover</div>
+    <div style="color:var(--muted);font-size:12px">Anime info</div>
+    <div style="font-weight:700;font-size:18px;margin:4px 0 6px" id="animeTitle">—</div>
+    <div style="color:var(--muted);font-size:12.5px" id="animeSub">Search to load metadata from AniList.</div>
+    <div class="tags" id="animeTags"></div>
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <button class="filter-btn" id="favBtn">Favorite</button>
+      <button class="filter-btn" id="aniLink" title="Open on AniList">AniList</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="head">
+      <div style="font-weight:700;font-size:15px">Compare</div>
+      <button class="filter-btn" id="clearCompare">Clear</button>
+    </div>
+    <table class="compare" id="compareTable">
+      <thead><tr><th>Title</th><th>Res</th><th>Size</th><th>S</th></tr></thead>
+      <tbody>
+        <tr><td colspan="4" style="color:var(--muted);font-size:12px">Click rows to compare side-by-side.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div style="font-weight:700;font-size:15px;margin-bottom:8px">Quick actions</div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <button class="filter-btn" id="qaCopy">Copy top magnet</button>
+      <button class="filter-btn" id="qaSend">Send top to qBittorrent</button>
+      <button class="filter-btn" id="qaSaveTorrent">Save top as .torrent</button>
+      <button class="filter-btn" id="qaSaveMagnet">Save top as .magnet</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div style="font-weight:700;font-size:15px;margin-bottom:8px">Ranker</div>
+    <div id="rankerStats" style="color:var(--muted);font-size:12.5px;line-height:1.6">loading…</div>
+  </div>
+</aside>
+
+<!-- File picker modal -->
+<div class="modal-bg" id="filesModal">
+  <div class="modal">
+    <h3 id="filesTitle">Files in torrent</h3>
+    <div id="filesBody" style="font-size:13px;line-height:1.7"></div>
+    <div class="modal-actions">
+      <button class="filter-btn" data-close>Close</button>
+      <button class="filter-btn" id="dlMagnet">Save .magnet</button>
+      <button class="filter-btn" id="dlFile">Save .torrent</button>
+      <button class="save-btn" id="dlQbit">Add to qBittorrent</button>
+    </div>
+  </div>
+</div>
+
+<div class="toasts" id="toasts"></div>
+
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends "_base.html" %}
+{% block layout_extra %} no-right{% endblock %}
+{% block body %}
+<header class="top">
+  <div class="searchbar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+    <input id="dlFilter" placeholder="Filter downloads by filename…" autocomplete="off">
+  </div>
+  <div class="top-actions">
+    <button class="iconbtn" id="dlRefresh" title="Refresh">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 3v6h6"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="main">
+  <div class="headline">
+    <div>
+      <h1>Download history</h1>
+      <div style="color:var(--muted);font-size:13px;margin-top:6px">
+        Saved <span class="kbd">.torrent</span> / <span class="kbd">.magnet</span> files in <span class="kbd">downloads/</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="kpis">
+    <div class="card"><div class="kpi-label">Files</div><div class="kpi-value" id="dlCount">{{ items|length }}</div></div>
+    <div class="card"><div class="kpi-label">Magnets</div><div class="kpi-value">{{ items|selectattr('type','equalto','magnet')|list|length }}</div></div>
+    <div class="card dark"><div class="kpi-label" style="color:#BDB8B3">Torrents</div><div class="kpi-value">{{ items|selectattr('type','equalto','torrent')|list|length }}</div></div>
+    <div class="card"><div class="kpi-label">Total size</div><div class="kpi-value" id="dlSize">—</div></div>
+  </div>
+
+  <div class="card" style="padding:0;overflow:hidden">
+    <table class="results-table" style="margin:0">
+      <thead><tr>
+        <th style="padding-left:16px">Filename</th>
+        <th>Type</th>
+        <th>Size</th>
+        <th>Saved</th>
+        <th style="text-align:right;padding-right:16px">Actions</th>
+      </tr></thead>
+      <tbody id="dlRows">
+        {% for it in items %}
+        <tr class="row" data-name="{{ it.name }}" data-size="{{ it.size }}">
+          <td style="padding-left:16px" class="title-cell">{{ it.name }}</td>
+          <td><span class="src">{{ it.type }}</span></td>
+          <td data-size="{{ it.size }}">{{ it.size }}</td>
+          <td style="color:var(--muted);font-size:12px">{{ it.mtime }}</td>
+          <td class="actions-cell" style="padding-right:16px">
+            <button class="icon-btn dl-rm" data-name="{{ it.name }}" title="Delete file">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+            </button>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" class="empty">No downloads yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="toasts" id="toasts"></div>
+{% endblock %}
+{% block scripts %}<script>window.__DOWNLOADS_PAGE = true;</script>{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "_base.html" %}
+{% block layout_extra %} no-right{% endblock %}
+{% block body %}
+<header class="top">
+  <div class="searchbar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg>
+    <input id="logFilter" placeholder="Filter log lines…" autocomplete="off">
+  </div>
+  <div class="top-actions">
+    <button class="iconbtn" id="logRefresh" title="Refresh">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 3v6h6"/></svg>
+    </button>
+    <button class="iconbtn" id="logDownload" title="Download full log">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+    </button>
+    <button class="iconbtn" id="logClear" title="Clear log">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+    </button>
+  </div>
+</header>
+<section class="main">
+  <div class="headline">
+    <div>
+      <h1>Reports</h1>
+      <div style="color:var(--muted);font-size:13px;margin-top:6px" id="logSubtitle">live activity log · tail -n 500</div>
+    </div>
+    <div class="toggle">
+      <span>Auto-refresh (2 s)</span>
+      <div class="switch off" id="logAuto"></div>
+    </div>
+  </div>
+
+  <div class="kpis">
+    <div class="card"><div class="kpi-label">Total events</div><div class="kpi-value" id="rTotal">—</div></div>
+    <div class="card"><div class="kpi-label">Errors</div><div class="kpi-value" id="rErrors">—</div></div>
+    <div class="card dark"><div class="kpi-label" style="color:#BDB8B3">Warnings</div><div class="kpi-value" id="rWarns">—</div></div>
+    <div class="card"><div class="kpi-label">Last entry</div><div class="kpi-value" id="rLast" style="font-size:14px">—</div></div>
+  </div>
+
+  <div class="card" style="padding:0;overflow:hidden">
+    <pre id="logBody" style="margin:0;max-height:60vh;overflow:auto;padding:14px 16px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;line-height:1.55;background:var(--panel-2);color:var(--ink-soft)">loading…</pre>
+  </div>
+</section>
+<div class="toasts" id="toasts"></div>
+{% endblock %}
+{% block scripts %}<script>window.__REPORTS_PAGE = true;</script>{% endblock %}

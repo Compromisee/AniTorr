@@ -1,0 +1,61 @@
+{% extends "_base.html" %}
+{% block layout_extra %} no-right{% endblock %}
+{% block body %}
+<header class="top">
+  <div class="searchbar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+    <input id="recentFilter" placeholder="Filter recent searches/picks…" autocomplete="off">
+  </div>
+  <div class="top-actions">
+    <button class="iconbtn" id="recExport" title="Export history">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+    </button>
+    <button class="iconbtn" id="recClear" title="Clear history">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="main">
+  <div class="headline">
+    <div>
+      <h1>Recent</h1>
+      <div style="color:var(--muted);font-size:13px;margin-top:6px">{{ history|length }} entr{{ 'y' if history|length == 1 else 'ies' }}</div>
+    </div>
+  </div>
+
+  <div class="card" style="padding:0;overflow:hidden">
+    <table class="results-table" style="margin:0">
+      <thead><tr>
+        <th style="padding-left:16px">When</th>
+        <th>Query / Title</th>
+        <th>Group</th>
+        <th>Res</th>
+        <th>Source</th>
+        <th style="text-align:right;padding-right:16px">Actions</th>
+      </tr></thead>
+      <tbody id="recentRows">
+        {% for h in history|reverse %}
+        <tr class="row" data-q="{{ h.query or h.title }}">
+          <td style="padding-left:16px;color:var(--muted);font-size:12px">{{ h.ts|int }}</td>
+          <td class="title-cell">{{ h.title or h.query }}</td>
+          <td>{{ h.group or '—' }}</td>
+          <td>{{ h.resolution or '—' }}</td>
+          <td><span class="src">{{ h.source or '—' }}</span></td>
+          <td class="actions-cell" style="padding-right:16px">
+            <button class="icon-btn redo" data-q="{{ h.query or h.title }}" title="Re-run">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 3v6h6"/></svg>
+            </button>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" class="empty">No recent activity. Run a search to populate this list.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="toasts" id="toasts"></div>
+{% endblock %}
+{% block scripts %}<script>window.__RECENT_PAGE = true;</script>{% endblock %}

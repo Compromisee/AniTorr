@@ -1,0 +1,176 @@
+{
+  "theme": "cream",
+  "language": "en",
+  "default_resolution": "1080",
+  "default_lang": "en",
+  "min_seeders": 1,
+  "aggregator_threshold": 5,
+  "cache_ttl_seconds": 600,
+  "max_threads": 12,
+  "request_timeout": 15,
+  "user_agent": "ANITorr/1.0",
+  "cors_proxy_url": "http://localhost:8787",
+  "neural_network": {
+    "enabled": true,
+    "learning_rate": 0.05,
+    "feature_weights": {
+      "seeders": 1.0,
+      "resolution": 1.2,
+      "group_trust": 1.5,
+      "size_efficiency": 0.8,
+      "prompt_match": 2.0,
+      "codec": 0.6,
+      "batch": 0.4
+    }
+  },
+  "sources": {
+    "nyaa": true,
+    "anidex": true,
+    "tokyotosho": true,
+    "anirena": true,
+    "subsplease": true,
+    "erai-raws": true,
+    "animetosho": true,
+    "rutracker": false,
+    "bakabt": false,
+    "shanaproject": true
+  },
+  "ddl_sources": {
+    "animepahe": true,
+    "gogoanime": true,
+    "nineanime": true,
+    "zoro": true,
+    "animixplay": false,
+    "animekisa": true,
+    "kissanime": false,
+    "twist": true,
+    "marin": true,
+    "allanime": true
+  },
+  "trusted_groups": [
+    "SubsPlease",
+    "Erai-raws",
+    "ASW",
+    "Judas",
+    "EMBER",
+    "SCY",
+    "Cyan",
+    "ARC",
+    "Akihito"
+  ],
+  "qbittorrent": {
+    "enabled": true,
+    "host": "http://localhost:8080",
+    "user": "admin",
+    "password": "adminadmin",
+    "category": "anime",
+    "save_path": ""
+  },
+  "deluge": {
+    "enabled": false,
+    "host": "localhost",
+    "port": 58846,
+    "user": "",
+    "password": ""
+  },
+  "transmission": {
+    "enabled": false,
+    "host": "localhost",
+    "port": 9091
+  },
+  "discord_webhook": {
+    "enabled": false,
+    "url": ""
+  },
+  "ntfy": {
+    "enabled": false,
+    "url": "https://ntfy.sh",
+    "topic": "anitorr"
+  },
+  "telegram": {
+    "enabled": false,
+    "token": "",
+    "chat_id": ""
+  },
+  "ai": {
+    "ollama_url": "http://localhost:11434",
+    "ollama_model": "llama3",
+    "openai_compatible_url": "",
+    "openai_api_key": "",
+    "openai_model": "gpt-4o-mini",
+    "use_for_title_normalization": true
+  },
+  "rss_watchlist": [],
+  "plugins": {
+    "watch_history": true,
+    "favorites": true,
+    "auto_download_rss": true,
+    "anilist_meta": true,
+    "mal_meta": true,
+    "autocomplete": true,
+    "ai_title_norm": true,
+    "fansub_trust": true,
+    "duplicate_detection": true,
+    "streaming_fallback": true,
+    "sse_live": true,
+    "pwa": true,
+    "client_filter": true,
+    "compare_view": true,
+    "info_sidebar": true,
+    "cache": true,
+    "rate_limit": true,
+    "docker": true,
+    "tests": true,
+    "mpv_stream": true,
+    "tag_parser": true,
+    "batch_download": true,
+    "jp_search": true,
+    "multi_lang_ui": true,
+    "stats_dashboard": true,
+    "seeder_health": true,
+    "discord_rpc": true,
+    "browser_ext": true,
+    "push_notify": true,
+    "verify_torrent": true,
+    "vpn_check": true,
+    "magnet_copy": true,
+    "share_url": true,
+    "bulk_select": true,
+    "did_you_mean": true,
+    "star_torrents": true,
+    "size_slider": true,
+    "seen_before": true,
+    "auto_dark": true,
+    "vim_keys": true,
+    "export": true,
+    "relevance_filter": true
+  },
+  "manga_sources": {
+    "mangadex": true,
+    "mangapark": true,
+    "mangakakalot": true,
+    "manganato": true,
+    "mangafox": true,
+    "batoto": true,
+    "hitomi": false,
+    "webtoons": true,
+    "tappytoon": false,
+    "mangaplus": true,
+    "asurascans": true,
+    "reaperscans": true,
+    "flamescans": true
+  },
+  "manga": {
+    "default_format": "cbz",
+    "autocrop": false,
+    "save_path": "",
+    "metadata_format": "apple_books",
+    "language": "en",
+    "page_progression": "rtl",
+    "embed_cover": true,
+    "include_chapter_split": false
+  },
+  "dashboard": {
+    "customizable": true
+  }
+}

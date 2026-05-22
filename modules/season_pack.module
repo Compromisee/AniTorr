@@ -1,0 +1,8 @@
+name: season_pack
+description: Finds the smallest 1080p batch for a season from trusted groups.
+category: search
+params:
+  - {name: title, type: string, default: ""}
+  - {name: season, type: int, default: 1}
+entry: season_pack.py
+function: run

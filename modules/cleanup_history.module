@@ -1,0 +1,7 @@
+name: cleanup_history
+description: Trim the neural ranker history to the last N entries.
+category: maintenance
+params:
+  - {name: keep, type: int, default: 100}
+entry: cleanup_history.py
+function: run

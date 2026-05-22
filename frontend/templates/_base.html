@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en" data-theme="{{ cfg.theme or 'cream' }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block title %}ANITorr{% endblock %}</title>
+<link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
+<link rel="apple-touch-icon" href="{{ url_for('static', filename='favicon.svg') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+<meta name="theme-color" content="#EC2A6A">
+<script>
+  // Apply persisted theme before paint to avoid FOUC
+  (function () {
+    try {
+      var t = localStorage.getItem("anitorr.theme");
+      if (t) document.documentElement.dataset.theme = t;
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body>
+<div class="app{% block layout_extra %}{% endblock %}" id="app">
+{% include "_layout.html" %}
+{% block body %}{% endblock %}
+</div><!-- /.app -->
+<script src="{{ url_for('static', filename='svg.js') }}"></script>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

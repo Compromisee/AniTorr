@@ -1,0 +1,75 @@
+{% extends "_base.html" %}
+{% block layout_extra %} no-right{% endblock %}
+{% block body %}
+<header class="top">
+  <div class="searchbar">
+    <a href="/manga" style="display:flex;align-items:center;gap:8px;color:var(--ink-soft)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+      Back
+    </a>
+    <input id="searchInPage" placeholder="Filter chapters…">
+  </div>
+</header>
+
+<section class="main">
+  <div class="headline">
+    <div>
+      <h1 id="seriesTitle">{{ slug }}</h1>
+      <div style="color:var(--muted);font-size:13px;margin-top:6px">
+        source: <span class="kbd">{{ source }}</span>
+      </div>
+    </div>
+    <button class="save-btn" id="bulkDl">Download selected as…</button>
+  </div>
+
+  <div class="card" style="padding:0;overflow:hidden">
+    <table class="results-table" style="margin:0">
+      <thead><tr>
+        <th style="padding-left:16px"><input type="checkbox" id="chkAll"></th>
+        <th>Chapter</th>
+        <th>Number</th>
+        <th>Pages</th>
+        <th style="text-align:right;padding-right:16px">Actions</th>
+      </tr></thead>
+      <tbody id="chRows">
+        <tr><td colspan="5" class="empty">Loading chapters…</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="modal-bg" id="fmtModal">
+  <div class="modal">
+    <h3>Export format</h3>
+    <div class="settings-grid" style="grid-template-columns: 1fr 1fr">
+      <div class="field"><label>Format</label>
+        <select id="bulkFmt">
+          <option value="cbz">CBZ</option>
+          <option value="zip">ZIP</option>
+          <option value="epub">EPUB (Apple Books)</option>
+          <option value="pdf">PDF</option>
+        </select>
+      </div>
+      <div class="field"><label>Auto-crop margins</label>
+        <select id="bulkCrop"><option value="0">no</option><option value="1">yes</option></select>
+      </div>
+      <div class="field" style="grid-column:1/-1"><label>Series title</label>
+        <input id="bulkSeries" value="{{ slug }}">
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="filter-btn" data-close>Cancel</button>
+      <button class="save-btn" id="bulkGo">Start</button>
+    </div>
+  </div>
+</div>
+
+<div class="toasts" id="toasts"></div>
+{% endblock %}
+{% block scripts %}
+<script>
+  window.__MANGA_DETAIL = true;
+  window.__MD_SOURCE = {{ source|tojson }};
+  window.__MD_SLUG = {{ slug|tojson }};
+</script>
+{% endblock %}

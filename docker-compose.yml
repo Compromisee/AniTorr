@@ -1,0 +1,18 @@
+version: "3.9"
+services:
+  anitorr:
+    build: .
+    ports: ["5000:5000"]
+    volumes:
+      - ./config.json:/app/config.json
+      - ./data:/app/data
+      - ./downloads:/app/downloads
+      - ./modules:/app/modules
+    environment:
+      - TZ=UTC
+  cors-proxy:
+    image: node:20-alpine
+    working_dir: /app
+    volumes: ["./cors_proxy:/app"]
+    command: sh -c "npm i --silent && node server.js"
+    ports: ["8787:8787"]

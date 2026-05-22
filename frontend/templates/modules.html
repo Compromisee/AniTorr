@@ -1,0 +1,60 @@
+{% extends "_base.html" %}
+{% set active_tab = "modules" %}
+{% block layout_extra %} no-right{% endblock %}
+{% block body %}
+<header class="top">
+  <div class="searchbar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+    <input id="modSearch" placeholder="Filter modules…" autocomplete="off">
+  </div>
+  <div class="top-actions">
+    <button class="iconbtn" id="reloadMods" title="Re-scan /modules">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 3v6h6"/></svg>
+    </button>
+  </div>
+</header>
+<section class="main">
+  <div class="headline">
+    <div>
+      <h1>Modules</h1>
+      <div style="color:var(--muted);font-size:13px;margin-top:6px">
+        Custom command blocks. Drop a <span class="kbd">.module</span> + paired <span class="kbd">.py</span> in <span class="kbd">/modules</span>.
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2" id="modList">
+    {% for m in modules %}
+    <div class="card module-card" data-mod="{{ m.name }}">
+      <div class="head">
+        <div>
+          <div style="color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.5px">{{ m.category }}</div>
+          <div style="font-weight:700;font-size:16px">{{ m.name }}</div>
+        </div>
+        <button class="save-btn run" data-name="{{ m.name }}">Run</button>
+      </div>
+      <div style="color:var(--ink-soft)">{{ m.description }}</div>
+      <div class="tags" style="margin-top:10px">
+        {% for p in m.params %}
+        <span class="tag">{{ p.name }} : {{ p.type }}{% if p.default is not none %} = {{ p.default }}{% endif %}</span>
+        {% endfor %}
+        <span class="tag accent">{{ m.entry }}</span>
+      </div>
+      <div class="params" data-for="{{ m.name }}" style="margin-top:10px">
+        {% for p in m.params %}
+        <div class="field">
+          <label>{{ p.name }}<span style="color:var(--muted)"> ({{ p.type }})</span></label>
+          <input data-pname="{{ p.name }}" value="{{ p.default if p.default is not none else '' }}">
+        </div>
+        {% endfor %}
+      </div>
+      <pre id="out-{{ m.name }}" style="background:var(--panel-2);border:1px solid var(--line);padding:10px;border-radius:10px;font-size:12px;overflow:auto;max-height:240px;margin:8px 0 0;color:var(--ink-soft)">Output will appear here.</pre>
+    </div>
+    {% else %}
+    <div class="card empty" style="grid-column:1/-1">No modules found in /modules.</div>
+    {% endfor %}
+  </div>
+</section>
+<div class="toasts" id="toasts"></div>
+{% endblock %}
+{% block scripts %}<script>window.__MODULES_PAGE = true;</script>{% endblock %}

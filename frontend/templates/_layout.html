@@ -1,0 +1,143 @@
+<!-- Sidebar shell. .app is opened/closed by _base.html. -->
+<aside class="rail">
+  <a class="logo" href="/" title="ANITorr">A</a>
+
+  <a class="ricon{% if active_tab == 'search' %} active{% endif %}" title="Search" href="/">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>
+  </a>
+  <a class="ricon{% if active_tab == 'dashboard' %} active{% endif %}" title="Dashboard" href="/">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg>
+  </a>
+  <a class="ricon{% if active_tab == 'manga' %} active{% endif %}" title="Manga / Manhua / Webtoons" href="/manga">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2z"/><path d="M22 4h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"/></svg>
+  </a>
+  <a class="ricon{% if active_tab == 'stats' %} active{% endif %}" title="Stats" href="/stats">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg>
+  </a>
+  <a class="ricon{% if active_tab == 'modules' %} active{% endif %}" title="Modules" href="/modules">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+  </a>
+
+  <a class="ricon{% if active_tab == 'notifications' %} active{% endif %} bell-icon" title="Notifications" href="/notifications" id="bellIcon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg>
+    <span class="rail-dot" id="bellDot" hidden></span>
+  </a>
+
+  <div class="spacer"></div>
+
+  <a class="ricon{% if active_tab == 'help' %} active{% endif %}" title="Help / Docs" href="/help">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 2-2.5 2-2.5 4"/><path d="M12 17.01l.01-.011"/></svg>
+  </a>
+  <a class="ricon{% if active_tab == 'settings' %} active{% endif %}" title="Settings" href="/settings">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1A2 2 0 1 1 4.3 17l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8L4.2 7A2 2 0 1 1 7 4.3l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1A2 2 0 1 1 19.7 7l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+  </a>
+  <div class="avatar" title="You"></div>
+</aside>
+
+<nav class="nav">
+  <div class="brand">
+    <b>ANITorr</b>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+  </div>
+
+  <!-- Quick search inside sidebar -->
+  <div class="nav-search">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>
+    <input id="navSearch" placeholder="Search…" autocomplete="off">
+  </div>
+
+  <a class="item{% if active_tab == 'favorites' %} active{% endif %}" href="/favorites">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9"/></svg>
+    Favorites
+    <span class="badge" id="navFavCount" hidden>0</span>
+  </a>
+  <a class="item{% if active_tab == 'recent' %} active{% endif %}" href="/recent">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+    Recent
+    <span class="badge" id="navHistCount" hidden>0</span>
+  </a>
+  <a class="item{% if active_tab == 'notifications' %} active{% endif %}" href="/notifications">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/></svg>
+    Notifications
+    <span class="badge" id="navNotifCount" hidden>0</span>
+  </a>
+  <a class="item{% if active_tab == 'stats' %} active{% endif %}" href="/stats">Ranker stats</a>
+  <a class="item{% if active_tab == 'modules' %} active{% endif %}" href="/modules">Modules</a>
+
+  <a class="group" href="/library" style="text-decoration:none">Library <span class="add" title="Open library">›</span></a>
+  <a class="item{% if active_tab == 'library' %} active{% endif %}" href="/library">Library overview</a>
+  <a class="item{% if active_tab == 'dashboard' %} active{% endif %}" href="/">Dashboard</a>
+  <a class="item" href="/?focus=1">Search</a>
+
+  <div class="item collapsible expanded" data-collapsible="shared">
+    Shared with me
+    <span class="chev">›</span>
+  </div>
+  <div class="children" data-children="shared">
+    <a class="item" href="/browse/seasonal">Anime / Seasonal</a>
+    <a class="item" href="/browse/movies">Anime / Movies</a>
+    <a class="item" href="/browse/watch-later">Watch later</a>
+    <a class="item" href="/browse/backlog">Backlog</a>
+  </div>
+
+  <a class="group" href="/reports" style="text-decoration:none">Reports <span class="add" title="Open report log">›</span></a>
+  <div class="item collapsible" data-collapsible="share">
+    Share with me
+    <span class="chev">›</span>
+  </div>
+  <div class="children" data-children="share" hidden>
+    <a class="item" href="/browse/picks-by-user">Picks by user</a>
+    <a class="item" href="/browse/download-duration">Download duration</a>
+  </div>
+
+  <div class="item collapsible expanded" data-collapsible="myr">
+    My reports
+    <span class="chev">›</span>
+  </div>
+  <div class="children" data-children="myr">
+    <a class="item{% if active_tab == 'reports' %} active{% endif %}" href="/reports">Activity log</a>
+    <a class="item" href="/browse/searches">Searches</a>
+    <a class="item" href="/downloads">Download history</a>
+    <a class="item{% if active_tab == 'dashboard' %} active{% endif %}" href="/">New report</a>
+    <a class="item" href="/stats">
+      Analytics
+      <span class="badge" id="navAnalyticsCount">0</span>
+    </a>
+  </div>
+
+  <div class="item" data-action="cache-clear" style="margin-top:10px;color:var(--muted)">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6v-2a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+    Clear cache
+  </div>
+
+  <div class="group">Categories <span class="add">+</span></div>
+
+  <div class="item collapsible expanded" data-collapsible="cat-anime">
+    Anime <span class="chev">›</span>
+  </div>
+  <div class="children" data-children="cat-anime">
+    <a class="item" href="/browse/seasonal">Currently airing</a>
+    <a class="item" href="/browse/movies">Movies</a>
+    <a class="item" href="/browse/batch">Batch / Season packs</a>
+  </div>
+
+  <div class="item collapsible expanded" data-collapsible="cat-manga">
+    Manga / Manhua / Webtoons <span class="chev">›</span>
+  </div>
+  <div class="children" data-children="cat-manga">
+    <a class="item{% if active_tab == 'manga' %} active{% endif %}" href="/manga">Manga browser</a>
+    <a class="item" href="/manga?kind=manhua">Manhua</a>
+    <a class="item" href="/manga?kind=manhwa">Manhwa</a>
+    <a class="item" href="/manga?kind=webtoon">Webtoons</a>
+    <a class="item" href="/manga#url">Download by URL</a>
+    <a class="item" href="/manga#jobs">Active downloads</a>
+  </div>
+
+  <div class="item collapsible" data-collapsible="cat-audio">
+    Audio <span class="chev">›</span>
+  </div>
+  <div class="children" data-children="cat-audio" hidden>
+    <a class="item" href="/browse/audio-flac">OSTs · FLAC</a>
+    <a class="item" href="/browse/audio-mp3">OSTs · MP3</a>
+  </div>
+</nav>

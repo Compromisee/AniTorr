@@ -1,0 +1,9 @@
+{
+  "name": "ANITorr",
+  "short_name": "ANITorr",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F3EFEC",
+  "theme_color": "#EC2A6A",
+  "icons": []
+}
